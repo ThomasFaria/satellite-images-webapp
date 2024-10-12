@@ -69,4 +69,4 @@ ordered_columns = (
     + ["geometry"]  # Put geometry at the end
 )
 
-print(merged_gdf[ordered_columns].set_index("ident_ilot").to_json())
+print(merged_gdf[ordered_columns].set_index("ident_ilot").to_crs("EPSG:4326").to_json())
