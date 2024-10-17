@@ -3,7 +3,10 @@
 This is an [Observable Framework](https://observablehq.com/framework) app. To start the local preview server, run:
 
 ```
-npm run dev
+curl -s https://deb.nodesource.com/setup_20.x | sudo bash
+sudo apt install nodejs -y
+npm install
+npm run dev -- --port 5000 --host 0.0.0.0
 ```
 
 Then visit <http://localhost:3000> to preview your app.
