@@ -9,7 +9,13 @@ npm install
 npm run dev -- --port 5000 --host 0.0.0.0
 ```
 
-Then visit <http://localhost:3000> to preview your app.
+Then visit <http://localhost:5000> to preview your app.
+
+Pour kill le port 5000 :
+
+```
+fuser -k 5000/tcp
+```
 
 For more, see <https://observablehq.com/framework/getting-started>.
 
