@@ -12,41 +12,58 @@ import {DuckDBClient} from "npm:@observablehq/duckdb";
 ```
 
 ```js
+import * as d3 from "npm:d3";
+```
+
+```js
 const variable = view(Inputs.select(["pct_building_2023", "area_building_change_absolute", "area_building_change_relative"], {value: "pct_building_2023", label: "Choisissez la variable à afficher"}));
+
+const centroid = d3.geoCentroid(test2);
+
+const maxWidth = d3.max(test2.features, feature => {
+  const length = d3.geoLength(feature.geometry); // Longueur du polygone
+  return length; // Renvoie la longueur du polygone
+});
+
+// Définir le rayon du cercle comme la moitié de la largeur maximale
+const radius = maxWidth / 2;
+
+const circle = d3.geoCircle().center(centroid).radius(radius).precision(5)();
+
 ```
 
 ```js
 Plot.plot({
   width: 975,
   height: 610,
-//  projection: "identity",
+  projection: {
+    type: "azimuthal-equidistant",
+    center: centroid, // Centrer sur le centroïde
+    inset: 10 // Ajuster l'inset si nécessaire
+  },
   x: {axis: null},
   y: {axis: null},
   color: createColorConfig(variable),
   marks: [
-    Plot.geo(test2, Plot.centroid({
+    Plot.geo(test2, {
       fill: d => d.properties.pct_building_2023,
       tip: true,
       channels: {
         Cluster_ID: d => d.id
-
       }
-    })),
+    }),
+    Plot.geo(circle, {
+      stroke: "red",
+      strokeWidth: 2,
+    })
   ]
 })
 ```
 
-
-
 <!-- QUERIES SQL -->
 
 ```js
-const test = FileAttachment("./data/clusters_statistics.parquet").parquet();
-
-```
-
-```js
-Inputs.table(test)
+centroid
 ```
 
 ```js
