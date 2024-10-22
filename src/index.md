@@ -4,122 +4,112 @@ toc: false
 
 <div class="hero">
   <h1>CRaTT</h1>
+  <h2> Petite application pour observer les performance des algorithmes de segmentation </h2>
 </div>
 
+
+
 ```js
-// npm imports
-import {DuckDBClient} from "npm:@observablehq/duckdb";
+// Importation de Leaflet depuis npm pour gérer la carte
+import * as L from "npm:leaflet";
 ```
 
 ```js
-import * as d3 from "npm:d3";
+// Configuration des départements avec des coordonnées spécifiques et des couches supplémentaires
+const departementConfig = {
+  mayotte: {
+    name: 'MAYOTTE',
+    center: [-12.78081553844026, 45.227656507434695],
+    availableYears: ['2023'],
+    extraLayers: [
+      {
+        name: 'Création 2020-2023',
+        layer: 'creation_MAYOTTE_2020_2023',
+      },
+    ],
+  },
+};
+
+// Fonction pour obtenir une couche WMS depuis GeoServer
+const getWMSTileLayer = (layer, opacity = 1) => {
+  const url = 'https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms';
+  const geoserverWorkspace = 'dirag';
+  
+  return L.tileLayer.wms(url, {
+    layers: `${geoserverWorkspace}:${layer}`,
+    format: 'image/png',
+    transparent: true,
+    version: '1.1.0',
+    opacity: opacity,
+    attribution: 'GeoServer',
+  });
+};
 ```
 
 ```js
-const variable = view(Inputs.select(["pct_building_2023", "area_building_change_absolute", "area_building_change_relative"], {value: "pct_building_2023", label: "Choisissez la variable à afficher"}));
+// Choix du département Mayotte
+const departement = 'mayotte';
+const config = departementConfig[departement];
 
-const centroid = d3.geoCentroid(test2);
+const { name, center, availableYears, extraLayers } = config;
 
-const maxWidth = d3.max(test2.features, feature => {
-  const length = d3.geoLength(feature.geometry); // Longueur du polygone
-  return length; // Renvoie la longueur du polygone
+// Créer une nouvelle div pour la carte
+const mapDiv = display(document.createElement("div"));
+mapDiv.style = "height: 400px;";
+
+
+// Initialiser la carte avec la position centrale du département
+const map = L.map(mapDiv).setView(center, 14);
+
+// Ajout d'une couche de base OpenStreetMap
+const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors',
 });
 
-// Définir le rayon du cercle comme la moitié de la largeur maximale
-const radius = maxWidth / 2;
+// Ajout d'une couche de base sombre pour le mode sombre
+const darkBaseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap contributors &copy; CartoDB',
+  subdomains: 'abcd',
+  maxZoom: 19,
+});
 
-const circle = d3.geoCircle().center(centroid).radius(radius).precision(5)();
+// Ajouter la couche de base par défaut
+baseLayer.addTo(map);
 
-```
+// Création des groupes de couches de base et superposées
+const baseLayers = {
+  'Clair': baseLayer,
+  'Sombre': darkBaseLayer,
+};
 
-```js
-Plot.plot({
-  width: 975,
-  height: 610,
-  projection: {
-    type: "azimuthal-equidistant",
-    center: centroid, // Centrer sur le centroïde
-    inset: 10 // Ajuster l'inset si nécessaire
-  },
-  x: {axis: null},
-  y: {axis: null},
-  color: createColorConfig(variable),
-  marks: [
-    Plot.geo(test2, {
-      fill: d => d.properties.pct_building_2023,
-      tip: true,
-      channels: {
-        Cluster_ID: d => d.id
-      }
-    }),
-    Plot.geo(circle, {
-      stroke: "red",
-      strokeWidth: 2,
-    })
-  ]
-})
-```
+const overlays = {};
 
-<!-- QUERIES SQL -->
+// Ajout de la couche "Ilots"
+const ilotsLayer = getWMSTileLayer(`${name}_ILOTS`);
+ilotsLayer.addTo(map);
+overlays['Ilots'] = ilotsLayer;
 
-```js
-centroid
-```
-
-```js
-Inputs.table(test2.features.map(d => d.properties))
-```
-
-
-```js
-const test2 = FileAttachment("./data/clusters_statistics.json").json();
-```
-
-```js
-test2
-```
-
-
-```js
-function createColorConfig(value) {
-  // const domain = [d3.quantile(test2.features.map(obj => obj.properties[variable]), 0.1), d3.quantile(test2.features.map(obj => obj.properties[variable]), 0.9)]
-  const domain = d3.extent(test2.features.map(obj => obj.properties[variable]))
-
-  switch (value) {
-    case "pct_building_2023":
-      return {
-        label: "Pourcentage de bâti (%)",
-        type: "linear",
-        scheme: "reds",
-        legend: true,
-        domain: domain,
-        range: [0, 1]
-      };
-    case "area_building_change_absolute":
-      return {
-        label: "Variation absolue de bâtis (m2)",
-        type: "diverging-symlog",
-        scheme: "burd",
-        domain:domain,
-        legend: true,
-        pivot: 0,
-        symmetric: true
-      };
-    case "area_building_change_relative":
-      return {
-        label: "Variation relative de bâtis (%)",
-        type: "diverging",
-        scheme: "burd",
-        domain: domain,
-        legend: true,
-        pivot: 0,
-        symmetric: true
-      };
-    default:
-      throw new Error("Invalid value provided");
-  }
+// Ajout des couches pour les années disponibles
+for (const year of availableYears) {
+  const pleiadesLayer = getWMSTileLayer(`${name}_${year}`);
+  overlays[`PLEIADES ${year}`] = pleiadesLayer;
+  
+  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`);
+  overlays[`Prédiction ${year}`] = predictionLayer;
 }
+
+// Ajout des couches supplémentaires
+for (const { name: layerName, layer } of extraLayers) {
+  const extraLayer = getWMSTileLayer(layer);
+  overlays[layerName] = extraLayer;
+}
+
+// Ajout du contrôle de couches à la carte
+L.control.layers(baseLayers, overlays).addTo(map);
+map;
 ```
+
+
 
 
 <style>
