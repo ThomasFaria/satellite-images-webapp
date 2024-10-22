@@ -54,9 +54,9 @@ merged_gdf.loc[:, "area_building_change_absolute"] = (
     merged_gdf.loc[:, "area_building_2023"] - merged_gdf.loc[:, "area_building_2022"]
 ) * 1e6
 
-merged_gdf.loc[:, "area_building_change_relative"] = merged_gdf.loc[
+merged_gdf.loc[:, "area_building_change_relative"] = (merged_gdf.loc[
     :, "area_building_change_absolute"
-] / (merged_gdf.loc[:, "area_building_2022"] * 1e6)
+] / (merged_gdf.loc[:, "area_building_2022"] * 1e6))*100
 
 
 # Order columns

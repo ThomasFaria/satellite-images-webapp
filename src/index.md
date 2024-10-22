@@ -41,15 +41,6 @@ Plot.plot({
 <!-- QUERIES SQL -->
 
 ```js
-const test = FileAttachment("./data/clusters_statistics.parquet").parquet();
-
-```
-
-```js
-Inputs.table(test)
-```
-
-```js
 Inputs.table(test2.features.map(d => d.properties))
 ```
 
@@ -91,12 +82,11 @@ function createColorConfig(value) {
     case "area_building_change_relative":
       return {
         label: "Variation relative de bâtis (%)",
-        type: "diverging",
-        scheme: "burd",
-        domain: domain,
+        type: "linear",
+        scheme: "reds",
         legend: true,
-        pivot: 0,
-        symmetric: true
+        domain: domain,
+        range: [0, 1]
       };
     default:
       throw new Error("Invalid value provided");
