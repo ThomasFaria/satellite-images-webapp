@@ -409,6 +409,11 @@ deckInstance.setProps({
 ```
 
 ```js
+// Légende initiale
+showLegendForLayer("geojsonLayer2");
+```
+
+```js
 const t = (function* () {
   const duration = 1000;
   const start = performance.now();
