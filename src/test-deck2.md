@@ -239,16 +239,16 @@ function showLegendForLayer(layerId) {
   
   // Légende à afficher en fonction de la couche sélectionnée
   if (layerId === 'geojsonLayer') {
-    legendTitle = 'Variation relative de bâtis (%) entre 2022 et 2023';
+    legendTitle = 'Variation relative de bâtis par îlots entre 2022 et 2023 (%)';
     legendContainer.appendChild(COLOR_LEGEND);
   } else if (layerId === 'geojsonLayer1') {
-    legendTitle = 'Variation absolue de bâtis (m²) entre 2022 et 2023';
+    legendTitle = 'Variation absolue de bâtis par îlots entre 2022 et 2023 (m²)';
     legendContainer.appendChild(COLOR_LEGEND_1);
   } else if (layerId === 'geojsonLayer2') {
-    legendTitle = 'Pourcentage de bâtiments par îlots en 2023';
+    legendTitle = 'Pourcentage de bâtis par îlots en 2023 (%)';
     legendContainer.appendChild(COLOR_LEGEND_2);
   } else if (layerId === 'geojsonLayer3') {
-    legendTitle = 'Superficie de bâtiments par îlots en 2023';
+    legendTitle = 'Superficie de bâtis par îlots en 2023 (m²)';
     legendContainer.appendChild(COLOR_LEGEND_3);
   }
   
