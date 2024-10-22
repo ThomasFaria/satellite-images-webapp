@@ -1,5 +1,5 @@
 ---
-title: Îlots sur fond d'images satellites
+title: Mayotte
 ---
 
 
@@ -31,7 +31,7 @@ const test2 = FileAttachment("./data/clusters_statistics.json").json();
 
 <div id="layerControl">
   <label><input type="checkbox" id="osmLayer" checked> OpenStreetMap</label><br>
-  <label><input type="checkbox" id="pleiadesLayer2023" checked> Images Pléïades 2023</label><br>
+  <label><input type="checkbox" id="pleiadesLayer2023"> Images Pléïades 2023</label><br>
   
   <label for="geojsonSelect">Choisissez la statistique par îlot à afficher :</label>
   <select id="geojsonSelect">
