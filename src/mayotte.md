@@ -426,8 +426,11 @@ window.onload = function() {
   // Réinitialiser les cases à cocher
   const checkboxes = document.querySelectorAll('#layerControl input[type="checkbox"]');
   checkboxes.forEach(checkbox => {
-      checkbox.checked = true; // Cocher toutes les cases
+      checkbox.checked = false; // Décocher toutes les cases
   });
+
+  const checkbox = document.getElementById('osmLayer');
+  checkbox.checked = true; // Cocher la case OpenStreetMap
 
   // Réinitialiser la liste déroulante
   const select = document.getElementById('geojsonSelect');
