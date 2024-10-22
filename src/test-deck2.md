@@ -39,6 +39,8 @@ const test2 = FileAttachment("./data/clusters_statistics.json").json();
 </div>
 
 ```js
+// Zoom initial de la carte sur Mayotte
+// Valeurs surement automatisables avec centroid et radius
 const initialViewState = {
   longitude: 45.14,
   latitude: -12.79,
@@ -51,16 +53,27 @@ const initialViewState = {
 ```
 
 ```js
+// A chaque fois que le curseur passe sur un îlot, ces infos s'affichent
 function getTooltip({object}) {
   if (!object) return null;
+
+  // Récupère et formate les valeurs
+  const pctBuilding2023 = Math.round(object.properties.pct_building_2023);
+  const areaBuildingChangeAbsolute = Math.round(object.properties.area_building_change_absolute);
+  const areaBuildingChangeRelative = Math.round(object.properties.area_building_change_relative);
+
+  // Ajoute un "+" devant les valeurs positives
+  const formattedAreaBuildingChangeAbsolute = areaBuildingChangeAbsolute > 0 ? `+${areaBuildingChangeAbsolute}` : areaBuildingChangeAbsolute;
+  const formattedAreaBuildingChangeRelative = areaBuildingChangeRelative > 0 ? `+${areaBuildingChangeRelative}` : areaBuildingChangeRelative;
+
   return {
     html: `
     <div><b>Pourcentage de bâti (%)</b></div>
-    <div>${Math.round(object.properties.pct_building_2023)}%</div>
+    <div>${pctBuilding2023}%</div>
     <div><b>Variation absolue de bâtis (m²)</b></div>
-    <div>${Math.round(object.properties.area_building_change_absolute)} / m²</div>
+    <div>${formattedAreaBuildingChangeAbsolute} m²</div>
     <div><b>Variation relative de bâtis (%)</b></div>
-    <div>${Math.round(object.properties.area_building_change_relative)}%</div>
+    <div>${formattedAreaBuildingChangeRelative}%</div>
     <div><b>Cluster ID</b></div>
     <div>${object.id}</div>
     `,
@@ -87,6 +100,7 @@ const effects = [
 ```
 
 ```js
+// Instantiation de la carte Deck
 const deckInstance = new DeckGL({
   container,
   initialViewState: initialViewState,
@@ -103,10 +117,9 @@ invalidation.then(() => {
 ```
 
 ```js
+// Constantes pour calculer les plages des color scales
 const geojsonData = test2.features;
-```
 
-```js
 const valuesForLayer = geojsonData.map(f => f.properties.area_building_change_relative);
 const minValueLayer = Math.round(Math.min(...valuesForLayer));
 const maxValueLayer = Math.round(Math.max(...valuesForLayer));
@@ -187,27 +200,6 @@ const COLOR_SCALE_2 = d3.scaleLinear()
 ```
 
 ```js
-// Créer un conteneur pour afficher les valeurs
-const outputContainer = document.createElement('div');
-outputContainer.id = 'output';
-document.body.appendChild(outputContainer);
-
-// Itérer à travers les features et afficher pct_building_2023
-test2.features.forEach((feature, index) => {
-  const value = feature.properties.area_building_change_relative;
-  
-  // Afficher dans la console
-  console.log(`Feature ${index + 1}: Pourcentage de bâti = ${value}%`);
-
-  // Afficher dans le conteneur HTML
-  const p = document.createElement('p');
-  p.textContent = `Feature ${index + 1}: Pourcentage de bâti = ${value}%`;
-  outputContainer.appendChild(p);
-});
-
-```
-
-```js
 function createColorLegend(colorScale, minValue, maxValue) {
   return Plot.plot({
     margin: 0,
@@ -226,6 +218,7 @@ function createColorLegend(colorScale, minValue, maxValue) {
 ```
 
 ```js
+// Légende pour chaque couche stat
 const COLOR_LEGEND = createColorLegend(COLOR_SCALE, minValueLayer, maxValueLayer);
 const COLOR_LEGEND_1 = createColorLegend(COLOR_SCALE_1, minValueLayer1, maxValueLayer1);
 const COLOR_LEGEND_2 = createColorLegend(COLOR_SCALE_2, minValueLayer2, maxValueLayer2);
@@ -254,7 +247,9 @@ function showLegendForLayer(layerId) {
   // Crée un élément pour le titre de la légende
   const titleElement = document.createElement('div');
   titleElement.textContent = legendTitle;
-  titleElement.style.fontWeight = 'bold';
+  titleElement.style.color = 'white'; // Couleur blanche
+  titleElement.style.fontWeight = 'bold'; // texte en gras
+  titleElement.style.fontSize = '16px'; // Taille de la police
   titleElement.style.marginBottom = '5px';
   
   // Ajoute le titre au conteneur de légende
@@ -285,7 +280,7 @@ const osmLayer = new TileLayer({
 const geojsonLayer = new GeoJsonLayer({
   id: "geojson",
   data: test2,
-  opacity: 0.1,
+  opacity: 0.2,
   lineWidthMinPixels: 1,
   getLineColor: [60, 60, 60],
   getFillColor: f => COLOR_SCALE(f.properties.area_building_change_relative),
@@ -297,7 +292,7 @@ const geojsonLayer = new GeoJsonLayer({
 const geojsonLayer1 = new GeoJsonLayer({
   id: "geojson1",
   data: test2,
-  opacity: 0.1,
+  opacity: 0.2,
   lineWidthMinPixels: 1,
   getLineColor: [60, 60, 60],
   getFillColor: f => COLOR_SCALE_1(f.properties.area_building_change_absolute),
@@ -309,7 +304,7 @@ const geojsonLayer1 = new GeoJsonLayer({
 const geojsonLayer2 = new GeoJsonLayer({
   id: "geojson2",
   data: test2,
-  opacity: 0.1,
+  opacity: 0.2,
   lineWidthMinPixels: 1,
   getLineColor: [60, 60, 60],
   getFillColor: f => COLOR_SCALE_2(f.properties.pct_building_2023),
@@ -344,7 +339,7 @@ function updateLayers() {
     layers.push(osmLayer);
   }
   
-  // Vérifie l'état de la case à cocher Pleiades
+  // Vérifie l'état de la case à cocher Pleiades 2023
   if (document.getElementById('pleiadesLayer2023').checked) {
     layers.push(pleiadesLayer2023);
   }
@@ -370,27 +365,18 @@ function updateLayers() {
 ```
 
 ```js
-document.addEventListener('DOMContentLoaded', () => {
-  // Sélectionnez les cases à cocher
-  const osmLayerCheckbox = document.getElementById('osmLayer');
-  const geojsonSelectChoice = document.getElementById('geojsonSelect');
-  const pleiadesLayer2023Checkbox = document.getElementById('pleiadesLayer2023');
+// Listener qui suivent les changements dans chaques cases
+const osmLayerCheckbox = document.getElementById('osmLayer');
+const geojsonSelectChoice = document.getElementById('geojsonSelect');
+const pleiadesLayer2023Checkbox = document.getElementById('pleiadesLayer2023');
 
-  // Vérifiez que les éléments existent avant de leur ajouter des écouteurs d'événements
-  if (osmLayerCheckbox && geojsonSelectChoice && pleiadesLayer2023Checkbox) {
-    osmLayerCheckbox.addEventListener('change', updateLayers);
-    geojsonSelectChoice.addEventListener('change', updateLayers);
-    pleiadesLayer2023Checkbox.addEventListener('change', updateLayers);
-
-    // Initialiser les couches lors du chargement
-    updateLayers();
-  } else {
-    console.error('Un ou plusieurs éléments de contrôle des couches sont manquants dans le DOM.');
-  }
-});
+osmLayerCheckbox.addEventListener('change', updateLayers);
+geojsonSelectChoice.addEventListener('change', updateLayers);
+pleiadesLayer2023Checkbox.addEventListener('change', updateLayers);
 ```
 
 ```js
+// Carte à l'état initial
 deckInstance.setProps({
   // layers: [
   //     new BitmapLayer(props, {
@@ -412,16 +398,3 @@ deckInstance.setProps({
 // Légende initiale
 showLegendForLayer("geojsonLayer2");
 ```
-
-```js
-const t = (function* () {
-  const duration = 1000;
-  const start = performance.now();
-  const end = start + duration;
-  let now;
-  while ((now = performance.now()) < end) yield d3.easeCubicInOut(Math.max(0, (now - start) / duration));
-  yield 1;
-})();
-```
-
-
