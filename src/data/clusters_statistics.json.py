@@ -50,6 +50,10 @@ gdfs = {
 merged_gdf = merge_gdfs(gdfs, id_columns, value_columns)
 
 
+merged_gdf.loc[:, "building_2023"] = merged_gdf.loc[
+    :, "area_building_2023"
+]*1e6
+
 merged_gdf.loc[:, "area_building_change_absolute"] = (
     merged_gdf.loc[:, "area_building_2023"] - merged_gdf.loc[:, "area_building_2022"]
 ) * 1e6
@@ -64,6 +68,7 @@ ordered_columns = (
     id_columns[:-1]  # All ID columns except geometry
     + [
         "pct_building_2023",
+        "building_2023",
         "area_building_change_absolute",
         "area_building_change_relative",
     ]  # Value columns
