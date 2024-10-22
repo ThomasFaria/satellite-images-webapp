@@ -20,7 +20,7 @@ const test2 = FileAttachment("./data/clusters_statistics.json").json();
 <div class="card" style="margin: 0 -1rem;">
 
 # Mayotte
-## Évolutions des bâtiments par îlots entre 2022 et 2023
+## Évolutions des bâtiments par îlot entre 2022 et 2023
 
 <figure style="max-width: none; position: relative;">
   <div id="container" style="border-radius: 8px; overflow: hidden; background: rgb(18, 35, 48); height: 800px; margin: 1rem 0;"></div>
@@ -35,8 +35,8 @@ const test2 = FileAttachment("./data/clusters_statistics.json").json();
   
   <label for="geojsonSelect">Choisissez la statistique par îlot à afficher :</label>
   <select id="geojsonSelect">
-    <option value="geojsonLayer3" selected>Superficie des bâtiments par îlots en 2023 (m²)</option>
-    <option value="geojsonLayer2">Pourcentage de bâtiments par îlots en 2023 (%)</option>
+    <option value="geojsonLayer3" selected>Superficie des bâtiments par îlot en 2023 (m²)</option>
+    <option value="geojsonLayer2">Pourcentage de bâtiments par îlot en 2023 (%)</option>
     <option value="geojsonLayer">Variations de bâti relative entre 2022 et 2023 (%)</option>
     <option value="geojsonLayer1">Variations de bâti absolue entre 2022 et 2023  (m²)</option>
   </select>
@@ -47,11 +47,11 @@ const test2 = FileAttachment("./data/clusters_statistics.json").json();
 // Valeurs surement automatisables avec centroid et radius
 const initialViewState = {
   longitude: 45.14,
-  latitude: -12.79,
-  zoom: 11,
+  latitude: -12.81,
+  zoom: 10.4,
   minZoom: 5,
-  maxZoom: 15,
-  pitch: 40.5,
+  maxZoom: 17,
+  pitch: 0,
   bearing: -5
 };
 ```
@@ -239,16 +239,16 @@ function showLegendForLayer(layerId) {
   
   // Légende à afficher en fonction de la couche sélectionnée
   if (layerId === 'geojsonLayer') {
-    legendTitle = 'Variation relative de bâtis par îlots entre 2022 et 2023 (%)';
+    legendTitle = 'Variation relative de bâtis par îlot entre 2022 et 2023 (%)';
     legendContainer.appendChild(COLOR_LEGEND);
   } else if (layerId === 'geojsonLayer1') {
-    legendTitle = 'Variation absolue de bâtis par îlots entre 2022 et 2023 (m²)';
+    legendTitle = 'Variation absolue de bâtis par îlot entre 2022 et 2023 (m²)';
     legendContainer.appendChild(COLOR_LEGEND_1);
   } else if (layerId === 'geojsonLayer2') {
-    legendTitle = 'Pourcentage de bâtis par îlots en 2023 (%)';
+    legendTitle = 'Pourcentage de bâtis par îlot en 2023 (%)';
     legendContainer.appendChild(COLOR_LEGEND_2);
   } else if (layerId === 'geojsonLayer3') {
-    legendTitle = 'Superficie de bâtis par îlots en 2023 (m²)';
+    legendTitle = 'Superficie de bâtis par îlot en 2023 (m²)';
     legendContainer.appendChild(COLOR_LEGEND_3);
   }
   
