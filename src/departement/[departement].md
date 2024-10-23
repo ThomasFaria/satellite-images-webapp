@@ -1,7 +1,3 @@
----
-title: [departement]
----
-
 ```js
 // Get the department from the URL parameter
 const departement = new URL(window.location.href).pathname.split('/').pop();
