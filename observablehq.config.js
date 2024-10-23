@@ -18,7 +18,7 @@ export default {
         name: "Non Dynamique",
         pages: [
           {name: "Mayotte", path: "/1.Mayotte"},
-          
+          {name: "slider", path: "/slider"}
         ]
       }
     ],
