@@ -63,11 +63,14 @@ export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, 
   const style = generateStyleFunction(indicator, quantiles, colorScale);
 
   const onEachFeature = (feature, layer) => {
-    if (feature.properties && feature.properties[indicator] !== undefined) {
-      console.log("HEHEHEHRE")
-      console.log(feature.properties[indicator])
-      const roundedValue = feature.properties[indicator].toFixed(1);
+    if (feature.properties && feature.properties[indicator] !== undefined && feature.properties[indicator] !== null) {
+      // Vérifie si la valeur est un nombre avant d'utiliser toFixed
+      const roundedValue = !isNaN(feature.properties[indicator]) 
+        ? feature.properties[indicator].toFixed(1) 
+        : 'NA';
       layer.bindPopup(`<b>${label}:</b> ${roundedValue}%`);
+    } else {
+      layer.bindPopup(`<b>${label}:</b> NA`);
     }
   };
 
