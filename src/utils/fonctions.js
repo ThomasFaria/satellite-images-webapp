@@ -33,13 +33,11 @@ export function generateStyleFunction(indicator, quantiles, colorScale) {
     };
   };
 }
-
-
-// Fonction pour obtenir une couche WMS depuis GeoServer
-export function getWMSTileLayer(layer, style = null, opacity = 1) {
+export function getWMSTileLayer(layer, styleName = null, opacity = 1) {
   const url = 'https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms';
   const geoserverWorkspace = 'dirag';
 
+  // Initialize the wmsOptions object with the style parameter
   const wmsOptions = {
     layers: `${geoserverWorkspace}:${layer}`,
     format: 'image/png',
@@ -48,13 +46,14 @@ export function getWMSTileLayer(layer, style = null, opacity = 1) {
     opacity: opacity,
     attribution: 'GeoServer'
   };
-
-  if (style) {
-    wmsOptions.styles = style;
+  
+  if(styleName) {
+    wmsOptions.styles = styleName
   }
-
+  // Return the tile layer with the WMS options
   return L.tileLayer.wms(url, wmsOptions);
 }
+
 
 // Fonction générale pour créer une couche GeoJSON avec un indicateur spécifique
 export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, colorScale) {
