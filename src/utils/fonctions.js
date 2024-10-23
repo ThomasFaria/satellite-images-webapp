@@ -63,14 +63,27 @@ export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, 
   const style = generateStyleFunction(indicator, quantiles, colorScale);
 
   const onEachFeature = (feature, layer) => {
+    const communeCode = feature.properties.depcom_2018 || 'N/A';
+    const ilotCode = feature.properties.code || 'N/A';
+    
     if (feature.properties && feature.properties[indicator] !== undefined && feature.properties[indicator] !== null) {
       // Check if the value is a number before using toFixed
       const roundedValue = !isNaN(feature.properties[indicator]) 
         ? feature.properties[indicator].toFixed(1) 
         : 'NA';
-      layer.bindPopup(`<b>${label}:</b> ${roundedValue}${unit}`);
+
+      // Construct the popup content with commune code and îlot code
+      layer.bindPopup(`
+        <b>Code Commune:</b> ${communeCode}<br>
+        <b>Code Îlot:</b> ${ilotCode}<br>
+        <b>${label}:</b> ${roundedValue}${unit}
+      `);
     } else {
-      layer.bindPopup(`<b>${label}:</b> NA`);
+      layer.bindPopup(`
+        <b>Code Commune:</b> ${communeCode}<br>
+        <b>Code Îlot:</b> ${ilotCode}<br>
+        <b>${label}:</b> NA
+      `);
     }
   };
 

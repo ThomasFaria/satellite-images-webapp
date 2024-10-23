@@ -1,6 +1,7 @@
 ---
-title: Mayotte
+toc: true
 ---
+
 
 # Cartographie
 ```js
@@ -12,13 +13,22 @@ import { quantileProbs, colorScales, departementConfig } from './utils/config.js
 ```
 
 ```js
-const statistics = FileAttachment("./data/clusters_statistics.json").json();
+const statistics = FileAttachment("../data/clusters_statistics.json").json();
 const geojsonData = statistics;
 ```
 
 ```js
+import {parseArgs} from "node:util";
+
+const {
+  values: {departement}
+} = parseArgs({
+  options: {departement: {type: "string"}}
+});
+
+console.log(The current product is ${departement})
 // Choix du département Mayotte
-const departement = 'mayotte';
+const departement = departement;
 const config = departementConfig[departement];
 const { name, center, availableYears } = config;
 
@@ -147,20 +157,6 @@ map.on('overlayremove', function (eventLayer) {
 
 // Tableau
 // slider avant après pour les cartes leaflet
-//slider et trouting dynamique : overkill le truc
-
-// ajouter fond de carte 2022 §> MAyotte etc ??? -> 
-// meme fichier pour réunion
-
-// slider
-// injection images, prédictions pour Mayotte 2022
-// Réunion images prédictions, pour 2022 2023 et statistiques
-
-// 1 page par dep  ?
-// slider sur une autre page 
-// GT en live excalidraw sur la structure applicative
-
-//
-
+//slidrer et trouting dynamique : overkill le truc
+// ajouter fond de carte 2022 §> MAyotte etc ???
 ```
-
