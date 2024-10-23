@@ -3,9 +3,9 @@ export default {
   // The app’s title; used in the sidebar and webpage titles.
   title: "CRaTT",
   dynamicPaths: [
-      "/departement",
-    ],
-   pages: [
+    "/departement/:departement"
+  ],
+  pages: [
       {
         name: "Departements",
         path: "/departement/",
