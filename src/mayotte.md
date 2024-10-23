@@ -352,17 +352,38 @@ const pleiadesLayer2022 = new _WMSLayer({
 ``` -->
 
 ```js
-function updateLayers() {
+function uncheckOthers(selectedCheckbox) {
+    // Parcourir toutes les checkboxes dans le container 'layerControl'
+    const checkboxes = document.querySelectorAll('#layerControl input[type="checkbox"]');
+    
+    checkboxes.forEach(checkbox => {
+      if (checkbox !== selectedCheckbox) {
+        checkbox.checked = false;
+      }
+    });
+  }
+```
+
+```js
+function updateLayers(changed) {
   const layers = [];
+  const osmLayerCheckbox = document.getElementById('osmLayer');
+  const pleiadesLayer2023Checkbox = document.getElementById('pleiadesLayer2023');
   
   // Vérifie l'état de la case à cocher OpenStreetMap
-  if (document.getElementById('osmLayer').checked) {
-    layers.push(osmLayer);
+  if (['osmLayer', ''].includes(changed) && osmLayerCheckbox.checked) {
+      layers.push(osmLayer);
+      if (changed !== '') {
+        uncheckOthers(osmLayerCheckbox);
+      }
   }
-  
+
   // Vérifie l'état de la case à cocher Pleiades 2023
-  if (document.getElementById('pleiadesLayer2023').checked) {
-    layers.push(pleiadesLayer2023);
+  if (['pleiadesLayer2023', ''].includes(changed) && pleiadesLayer2023Checkbox.checked) {
+      layers.push(pleiadesLayer2023);
+      if (changed !== '') {
+        uncheckOthers(pleiadesLayer2023Checkbox);
+      }
   }
 
   // Récupère la valeur sélectionnée du menu déroulant
@@ -393,9 +414,9 @@ const osmLayerCheckbox = document.getElementById('osmLayer');
 const geojsonSelectChoice = document.getElementById('geojsonSelect');
 const pleiadesLayer2023Checkbox = document.getElementById('pleiadesLayer2023');
 
-osmLayerCheckbox.addEventListener('change', updateLayers);
-geojsonSelectChoice.addEventListener('change', updateLayers);
-pleiadesLayer2023Checkbox.addEventListener('change', updateLayers);
+osmLayerCheckbox.addEventListener('change', updateLayers('osmLayer'));
+geojsonSelectChoice.addEventListener('change', updateLayers(''));
+pleiadesLayer2023Checkbox.addEventListener('change', updateLayers('pleiadesLayer2023'));
 ```
 
 ```js
@@ -412,7 +433,6 @@ deckInstance.setProps({
   //   }),
   layers: [
     osmLayer,
-    pleiadesLayer2023,
     geojsonLayer3]
 });
 // Légende initiale
