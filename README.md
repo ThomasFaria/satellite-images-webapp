@@ -1,5 +1,14 @@
 # CRaTT
 
+## Petit ajout Clément :
+- les données sont générées au moment du buil de la page par les codes présents dans le répertrtoire data.
+ces codes peuvent être en n'importe quels langages et doivent juste printer à la fin les data au foormat souhaité (json parquet..)
+- les fichiers de code doivent porter le nom et le format du fichier exemple fibonacci.json.py, sera appelé lorsqu'on voudra 
+ouvrir le fichier généré par ce dernier avec FileAttachement("data/fibonacci.json").json() -> .py python n'est pas que le seul langage possible ici !
+C'est l'idée des data laoaders 
+- l'ordre d'apparition des pages dépend de l'ordre alphabétique du nom des .md correspondant, le titre de la page est donné par la balise title
+- index donne la page d'accueil
+## La suite
 This is an [Observable Framework](https://observablehq.com/framework) app. To start the local preview server, run:
 
 ```
