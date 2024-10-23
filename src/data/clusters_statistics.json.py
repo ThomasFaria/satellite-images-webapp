@@ -27,6 +27,7 @@ file_paths = {
     "2023": "projet-slums-detection/data-prediction/PLEIADES/MAYOTTE/2023/Segmentation/1/statistics_clusters.parquet",
 }
 
+
 id_columns = ["ident_ilot", "code", "depcom_2018", "ident_up", "dep", "geometry"]
 value_columns = ["area_cluster", "area_building", "pct_building"]
 

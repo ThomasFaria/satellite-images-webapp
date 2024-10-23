@@ -2,7 +2,25 @@
 title: [departement]
 ---
 
-# Cartographie
+```js
+// Get the department from the URL parameter
+const departement = new URL(window.location.href).pathname.split('/').pop();
+console.log(`The current department is ${departement}`);
+```
+
+```js
+// Fonction pour formater le nom du département (première lettre en majuscule)
+function formatDepartementName(nom) {
+  return nom.charAt(0).toUpperCase() + nom.slice(1).toLowerCase();
+}
+
+// Crée un élément h1 avec le nom du département
+const titre = html`<h1>Cartographie de ${formatDepartementName(departement)}</h1>`;
+
+display(titre);
+```
+
+
 ```js
 // Importation de Leaflet depuis npm pour gérer la carte
 //import * as L from "npm:leaflet";
@@ -12,10 +30,6 @@ import { quantileProbs, colorScales, departementConfig } from '../utils/config.j
 ```
 
 ```js
-// Get the department from the URL parameter
-const departement = new URL(window.location.href).pathname.split('/').pop();
-console.log(`The current department is ${departement}`);
-
 const statistics = FileAttachment("../data/clusters_statistics.json").json();
 ```
 
@@ -26,7 +40,7 @@ const { name, center, availableYears } = config;
 
 // Initialisation de la carte Leaflet
 const mapDiv = display(document.createElement("div"));
-mapDiv.style = "height: 600px; width: 100%; margin: 0 auto;";
+mapDiv.style = "height: 400px; width: 100%; margin: 0 auto;";
 
 // Initialiser la carte avec la position centrale du département
 const map = L.map(mapDiv).setView(center, 14,10.4);
