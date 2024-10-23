@@ -160,30 +160,98 @@ map.on('overlayremove', function (eventLayer) {
 
 ```
 ```js
-Inputs.table(statistics.features.map(d => d.properties))
-//Inputs.table(properties)
+const search_properties = view(Inputs.search(statistics.features.map(d => d.properties),{placeholder: "Retrouver îlot…"}))
+search_properties;
+console.log("titou");
+console.log(search_properties);
+// D'abord, créons une liste d'options à partir de vos données
+const ilotOptions = statistics.features.map(feature => ({
+  depcom: feature.properties.depcom_2018,
+  code: feature.properties.code,
+  label: `${feature.properties.depcom_2018} - ${feature.properties.code}`
+}));
+
+// Maintenant, créons le sélecteur
+const selectedIlot = view(
+  Inputs.select(ilotOptions, {
+    label: "Sélectionnez un îlot",
+    format: (ilot) => ilot.label,
+    value: ilotOptions[0] // Sélectionne le premier îlot par défaut
+  })
+);
+
+// Affichons le sélecteur
+console.log("kikouu")
+console.log(selectedIlot.value);
 ```
 
 ```js
-// VARIABILISER !! routing dynamique !!
-// tableau de statistiques interactives avec sélection des ilots de Jean françois §> interactivité, je clique sur l'ilot dans une table il me le highlight sur la carte
+// ée le tableau interactif
+const table = view(
+    Inputs.table(statistics.features.map(f => ({
+      depcom_2018: f.properties.depcom_2018,
+      code: f.properties.code,
+      building_2023: f.properties.building_2023.toFixed(0),
+      pct_building_2023: f.properties.pct_building_2023.toFixed(0),
+      area_building_change_absolute:f.properties.area_building_change_absolute.toFixed(0),
+      area_building_change_relative:f.properties.area_building_change_relative.toFixed(1),
+    })), {
+      columns: ['depcom_2018', 'code', 'building_2023', 'pct_building_2023','area_building_change_absolute','area_building_change_relative'],
+      header: {
+        depcom_2018: 'Code Commune',
+        code: 'Code Îlot',
+        building_2023: 'Surface Bâtie 2023 (m²)',
+        pct_building_2023: '% Bâti 2023',
+        area_building_change_absolute: 'écart absolu',
+        area_building_change_relative:'écart relatif'
+      },
+      width: {
+        depcom_2018: 120,
+        code: 100,
+        building_2023: 150,
+        pct_building_2023: 120
+      },
+      format: {
+        building_2023: x => x + ' m²',
+        pct_building_2023: x => x + ' %',
+        area_building_change_absolute: x => x + ' m²',
+        area_building_change_relative: x => x + ' %',
+      },
+      rows: 10
+    },
+    {placeholder: "Rechercher ilot.."}
+    )
+  );
+table
+```
 
-// Tableau
-// slider avant après pour les cartes leaflet
-//slider et trouting dynamique : overkill le truc
+```js
+// // Fonction pour mettre en surbrillance les features sélectionnées
+// function highlightFeatures(depcom, code) {
+//   const polygonLayer = overlays["pct_building_2023"]
+//   polygonLayer.eachLayer(layer => {
+//     if (layer.feature.properties.depcom_2018 === depcom && layer.feature.properties.code === code) {
+//       layer.setStyle({
+//         fillColor: '#ff7800',
+//         weight: 5,
+//         color: '#000',
+//         fillOpacity: 0.9
+//       });
+//       map.fitBounds(layer.getBounds());
+//     } else {
+//       polygonLayer.resetStyle(layer);
+//     }
+//   });
+// }
 
-// ajouter fond de carte 2022 §> MAyotte etc ??? -> 
-// meme fichier pour réunion
+// // Ajoute un écouteur d'événements pour le clic sur une ligne du tableau
+// table.addEventListener('inmput', (event) => {
+//   if (event.target.selectedIndex !== -1) {
+//     const selectedRow = event.target.value;
+//     highlightFeatures(selectedRow.depcom_2018, selectedRow.code);
+//   }
+// });
 
-// slider
-// injection images, prédictions pour Mayotte 2022
-// Réunion images prédictions, pour 2022 2023 et statistiques
-
-// 1 page par dep  ?
-// slider sur une autre page 
-// GT en live excalidraw sur la structure applicative
-
-//
 
 ```
 
