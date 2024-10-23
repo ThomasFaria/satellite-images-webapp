@@ -30,7 +30,13 @@ import { quantileProbs, colorScales, departementConfig } from '../utils/config.j
 ```
 
 ```js
-const statistics = FileAttachment("../data/clusters_statistics.json").json();
+const files = [
+  {id: "mayotte", file: FileAttachment("../data/clusters_statistics_mayotte.json")},
+  {id: "reunion", file: FileAttachment("../data/clusters_statistics_reunion.json")},
+]
+// Trouve le fichier correspondant au département
+const selec = files.find(f => f.id === departement);
+const statistics = await selec.file.json();
 ```
 
 ```js
