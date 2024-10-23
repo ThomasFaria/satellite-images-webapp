@@ -160,10 +160,8 @@ map.on('overlayremove', function (eventLayer) {
 
 ```
 ```js
-const search_properties = view(Inputs.search(statistics.features.map(d => d.properties),{placeholder: "Retrouver îlot…"}))
-search_properties;
-console.log("titou");
-console.log(search_properties);
+const search_properties = Inputs.search(statistics.features.map(d => d.properties),{placeholder: "Retrouver îlot…"})
+view(search_properties)
 // D'abord, créons une liste d'options à partir de vos données
 const ilotOptions = statistics.features.map(feature => ({
   depcom: feature.properties.depcom_2018,
@@ -172,17 +170,14 @@ const ilotOptions = statistics.features.map(feature => ({
 }));
 
 // Maintenant, créons le sélecteur
-const selectedIlot = view(
+const selectedIlot = 
   Inputs.select(ilotOptions, {
     label: "Sélectionnez un îlot",
     format: (ilot) => ilot.label,
     value: ilotOptions[0] // Sélectionne le premier îlot par défaut
-  })
-);
+  });
 
-// Affichons le sélecteur
-console.log("kikouu")
-console.log(selectedIlot.value);
+view(selectedIlot)
 ```
 
 ```js
@@ -226,32 +221,8 @@ table
 ```
 
 ```js
-// // Fonction pour mettre en surbrillance les features sélectionnées
-// function highlightFeatures(depcom, code) {
-//   const polygonLayer = overlays["pct_building_2023"]
-//   polygonLayer.eachLayer(layer => {
-//     if (layer.feature.properties.depcom_2018 === depcom && layer.feature.properties.code === code) {
-//       layer.setStyle({
-//         fillColor: '#ff7800',
-//         weight: 5,
-//         color: '#000',
-//         fillOpacity: 0.9
-//       });
-//       map.fitBounds(layer.getBounds());
-//     } else {
-//       polygonLayer.resetStyle(layer);
-//     }
-//   });
-// }
-
-// // Ajoute un écouteur d'événements pour le clic sur une ligne du tableau
-// table.addEventListener('inmput', (event) => {
-//   if (event.target.selectedIndex !== -1) {
-//     const selectedRow = event.target.value;
-//     highlightFeatures(selectedRow.depcom_2018, selectedRow.code);
-//   }
-// });
-
-
+display(selectedIlot.value)
+display(search_properties.value)
+// gérer les couches àpartir de ça et filtrer la table
 ```
 
