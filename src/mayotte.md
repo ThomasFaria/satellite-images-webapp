@@ -49,8 +49,8 @@ const initialViewState = {
   longitude: 45.14,
   latitude: -12.81,
   zoom: 10.4,
-  minZoom: 5,
-  maxZoom: 17,
+  minZoom: 9,
+  maxZoom: 17.4,
   pitch: 0,
   bearing: -5
 };
