@@ -38,5 +38,4 @@ const sideBySide = L.control.sideBySide(layerBefore, layerAfter).addTo(map);
 // Retourner la carte pour l'afficher
 map;
 
-
 ```

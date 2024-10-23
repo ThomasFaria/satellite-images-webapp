@@ -7,11 +7,6 @@ toc: false
   <h2> Petite application pour observer les performance des algorithmes de segmentation </h2>
 </div>
 
-
-```js
-const statistics = FileAttachment("./data/clusters_statistics.json").json();
-```
-
 <style>
 
 .hero {
