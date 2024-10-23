@@ -1,4 +1,4 @@
-// Fonction pour calculer les quantiles
+// Function to calculate quantiles
 export function calculateQuantiles(values, quantileProbs) {
   values.sort((a, b) => a - b);
   return quantileProbs.map(q => {
@@ -9,7 +9,7 @@ export function calculateQuantiles(values, quantileProbs) {
   });
 }
 
-// Fonction pour obtenir la couleur en fonction de la valeur et des quantiles
+// Function to get the color based on value and quantiles
 export function getColor(value, quantiles, colorScale) {
   for (let i = 0; i < quantiles.length - 1; i++) {
     if (value <= quantiles[i + 1]) {
@@ -19,11 +19,11 @@ export function getColor(value, quantiles, colorScale) {
   return colorScale[colorScale.length - 1];
 }
 
-// Fonction pour créer une fonction de style basée sur un indicateur spécifique
+// Function to create a style function based on a specific indicator
 export function generateStyleFunction(indicator, quantiles, colorScale) {
-  // Retourne une fonction qui prend 'feature' en paramètre
+  // Returns a function that takes 'feature' as a parameter
   return function (feature) {
-    const value = feature.properties[indicator]; // Récupère la valeur dynamique basée sur l'indicateur
+    const value = feature.properties[indicator]; // Get the dynamic value based on the indicator
     return {
       fillColor: getColor(value, quantiles, colorScale),
       weight: 0.7,
@@ -33,6 +33,8 @@ export function generateStyleFunction(indicator, quantiles, colorScale) {
     };
   };
 }
+
+// Function to get a WMS Tile Layer
 export function getWMSTileLayer(layer, styleName = null, opacity = 1) {
   const url = 'https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms';
   const geoserverWorkspace = 'dirag';
@@ -47,27 +49,26 @@ export function getWMSTileLayer(layer, styleName = null, opacity = 1) {
     attribution: 'GeoServer'
   };
   
-  if(styleName) {
-    wmsOptions.styles = styleName
+  if (styleName) {
+    wmsOptions.styles = styleName;
   }
   // Return the tile layer with the WMS options
   return L.tileLayer.wms(url, wmsOptions);
 }
 
-
-// Fonction générale pour créer une couche GeoJSON avec un indicateur spécifique
-export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, colorScale) {
+// General function to create a GeoJSON layer with a specific indicator and unit
+export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, colorScale, unit = '%') {
   const values = statistics.features.map(f => f.properties[indicator]);
   const quantiles = calculateQuantiles(values, quantileProbs);
   const style = generateStyleFunction(indicator, quantiles, colorScale);
 
   const onEachFeature = (feature, layer) => {
     if (feature.properties && feature.properties[indicator] !== undefined && feature.properties[indicator] !== null) {
-      // Vérifie si la valeur est un nombre avant d'utiliser toFixed
+      // Check if the value is a number before using toFixed
       const roundedValue = !isNaN(feature.properties[indicator]) 
         ? feature.properties[indicator].toFixed(1) 
         : 'NA';
-      layer.bindPopup(`<b>${label}:</b> ${roundedValue}%`);
+      layer.bindPopup(`<b>${label}:</b> ${roundedValue}${unit}`);
     } else {
       layer.bindPopup(`<b>${label}:</b> NA`);
     }
@@ -79,12 +80,12 @@ export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, 
   });
 }
 
-// Fonction pour mettre à jour la légende
-export function updateLegend(indicator, colorScale, quantiles) {
+// Function to update the legend
+export function updateLegend(indicator, colorScale, quantiles, unit = '%') {
   const div = L.DomUtil.create('div', 'info legend');
   const labels = [];
 
-  div.innerHTML += `<h4 style="color:black; text-shadow: -1px 0px 1px white, 0px -1px 1px white, 1px 0px 1px white, 0px 1px 1px white;">${indicator.label} (%)</h4>`;
+  div.innerHTML += `<h4 style="color:black; text-shadow: -1px 0px 1px white, 0px -1px 1px white, 1px 0px 1px white, 0px 1px 1px white;">${indicator.label} (${unit})</h4>`;
 
   for (let i = 0; i < quantiles.length - 1; i++) {
     const from = quantiles[i];
@@ -93,7 +94,7 @@ export function updateLegend(indicator, colorScale, quantiles) {
 
     labels.push(
       `<i style="background:${color}; width:18px; height:18px; float:left; margin-right:8px; opacity:1;"></i>` +
-      `<span style="color:black; text-shadow: -1px 0px 1px white, 0px -1px 1px white, 1px 0px 1px white, 0px 1px 1px white;">${Math.round(from)} &ndash; ${Math.round(to)}</span>`
+      `<span style="color:black; text-shadow: -1px 0px 1px white, 0px -1px 1px white, 1px 0px 1px white, 0px 1px 1px white;">${Math.round(from)} &ndash; ${Math.round(to)}</span> ${unit}`
     );
   }
 
