@@ -11,6 +11,7 @@ export default {
         path: "/departement/",
         pages: [
           {name: "Mayotte", path: "/departement/mayotte"},
+          {name: "Reunion", path: "/departement/reunion"}
         ]
       },
       {
