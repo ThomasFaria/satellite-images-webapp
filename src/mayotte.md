@@ -414,9 +414,9 @@ const osmLayerCheckbox = document.getElementById('osmLayer');
 const geojsonSelectChoice = document.getElementById('geojsonSelect');
 const pleiadesLayer2023Checkbox = document.getElementById('pleiadesLayer2023');
 
-osmLayerCheckbox.addEventListener('change', updateLayers('osmLayer'));
-geojsonSelectChoice.addEventListener('change', updateLayers(''));
-pleiadesLayer2023Checkbox.addEventListener('change', updateLayers('pleiadesLayer2023'));
+osmLayerCheckbox.addEventListener('change', () => updateLayers('osmLayer'));
+geojsonSelectChoice.addEventListener('change', () => updateLayers(''));
+pleiadesLayer2023Checkbox.addEventListener('change', () => updateLayers('pleiadesLayer2023'));
 ```
 
 ```js
