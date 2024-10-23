@@ -1,31 +1,25 @@
 ---
-toc: true
+title: [departement]
 ---
 
 # Cartographie
 ```js
 // Importation de Leaflet depuis npm pour gérer la carte
-import * as L from "npm:leaflet";
+//import * as L from "npm:leaflet";
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.6.1/dist/d3.min.js";
 import { calculateQuantiles, getColor, createStyle, onEachFeature, getWMSTileLayer,createGeoJsonLayer,updateLegend} from "../utils/fonctions.js";
 import { quantileProbs, colorScales, departementConfig } from '../utils/config.js';
 ```
 
 ```js
+// Get the department from the URL parameter
+const departement = new URL(window.location.href).pathname.split('/').pop();
+console.log(`The current department is ${departement}`);
+
 const statistics = FileAttachment("../data/clusters_statistics.json").json();
-const geojsonData = statistics;
 ```
 
 ```js
-import {parseArgs} from "node:util";
-
-const {
-  values: {departement}
-} = parseArgs({
-  options: {departement: {type: "string"}}
-});
-
-console.log("The current product is ${departement}")
 // Choix du département Mayotte
 const config = departementConfig[departement];
 const { name, center, availableYears } = config;
@@ -150,11 +144,30 @@ map.on('overlayremove', function (eventLayer) {
 
 ```
 ```js
+Inputs.table(statistics.features.map(d => d.properties))
+//Inputs.table(properties)
+```
+
+```js
 // VARIABILISER !! routing dynamique !!
 // tableau de statistiques interactives avec sélection des ilots de Jean françois §> interactivité, je clique sur l'ilot dans une table il me le highlight sur la carte
 
 // Tableau
 // slider avant après pour les cartes leaflet
-//slidrer et trouting dynamique : overkill le truc
-// ajouter fond de carte 2022 §> MAyotte etc ???
+//slider et trouting dynamique : overkill le truc
+
+// ajouter fond de carte 2022 §> MAyotte etc ??? -> 
+// meme fichier pour réunion
+
+// slider
+// injection images, prédictions pour Mayotte 2022
+// Réunion images prédictions, pour 2022 2023 et statistiques
+
+// 1 page par dep  ?
+// slider sur une autre page 
+// GT en live excalidraw sur la structure applicative
+
+//
+
 ```
+
