@@ -2,14 +2,13 @@
 toc: true
 ---
 
-
 # Cartographie
 ```js
 // Importation de Leaflet depuis npm pour gérer la carte
 import * as L from "npm:leaflet";
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.6.1/dist/d3.min.js";
-import { calculateQuantiles, getColor, createStyle, onEachFeature, getWMSTileLayer,createGeoJsonLayer,updateLegend} from "./utils/fonctions.js";
-import { quantileProbs, colorScales, departementConfig } from './utils/config.js';
+import { calculateQuantiles, getColor, createStyle, onEachFeature, getWMSTileLayer,createGeoJsonLayer,updateLegend} from "../utils/fonctions.js";
+import { quantileProbs, colorScales, departementConfig } from '../utils/config.js';
 ```
 
 ```js
@@ -26,9 +25,8 @@ const {
   options: {departement: {type: "string"}}
 });
 
-console.log(The current product is ${departement})
+console.log("The current product is ${departement}")
 // Choix du département Mayotte
-const departement = departement;
 const config = departementConfig[departement];
 const { name, center, availableYears } = config;
 
