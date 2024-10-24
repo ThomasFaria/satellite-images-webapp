@@ -110,19 +110,17 @@ const baseLayers = {
 ```
 
 ```js
-// Assuming statistics, map, availableYears, name, quantileProbs, and colorScales are already defined
 const overlays = {};
-const styleName = "contour_rouge"; // Defined in GeoServer
-
 // Adding layers for available years
-for (const year of availableYears) {
+const styleNames = ["contour_rouge","contour_bleu"]
+
+availableYears.forEach((year, index) => {
   const pleiadesLayer = getWMSTileLayer(`${name}_${year}`);
   overlays[`PLEIADES ${year}`] = pleiadesLayer;
   
-  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`, styleName);
+  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`, styleNames[index]);
   overlays[`Prédiction ${year}`] = predictionLayer;
-}
-
+});
 // Labels and indicators with associated units
 const labels = [
   { indicator: 'pct_building_2023', label: 'Pourcentage de bâti 2023', colorScale: 'redScale', unit: '%' },
@@ -130,6 +128,8 @@ const labels = [
   { indicator: 'area_building_change_absolute', label: 'Variation de Surface absolue', colorScale: 'blueScale', unit: 'm²' },
   { indicator: 'area_building_change_relative', label: 'Variation de Surface relative', colorScale: 'yellowScale', unit: '%' }
 ];
+
+// Assuming statistics, map, availableYears, name, quantileProbs, and colorScales are already defined
 
 // Create and add GeoJSON layers
 let isFirstLayer = true;
