@@ -75,6 +75,17 @@ mapDiv.style = "height: 600px; width: 100%; margin: 0 auto;";
 // Initialiser la carte avec la position centrale du département
 const map = L.map(mapDiv).setView(center, 17);
 
+
+// Créer un icône personnalisé pour le marqueur
+const crossIcon = L.divIcon({
+  className: 'custom-cross-icon',
+  html: '<div style="width: 10px; height: 10px; background-color: black; border: 2px solid white; border-radius: 50%;"></div>',
+  iconSize: [10, 10], // Taille de l'icône
+  iconAnchor: [5, 5]  // Point d'ancrage de l'icône (centre de l'icône)
+});
+
+// Ajouter le marqueur à la carte
+L.marker(center, { icon: crossIcon }).addTo(map);
 // Ajout d'une couche de base OpenStreetMap
 const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors',
