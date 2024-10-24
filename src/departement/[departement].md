@@ -109,7 +109,6 @@ map.addLayer(ilotBoundariesLayer);
 const baseLayers = {
   'Clair': baseLayer,
   'Sombre': darkBaseLayer,
-  "Contours des îlots": ilotBoundariesLayer
 };
 ```
 
@@ -147,6 +146,7 @@ for (const { indicator, label, colorScale, unit } of labels) {
     isFirstLayer = false;
   }
 }
+ overlays["Contours des îlots"] = ilotBoundariesLayer.addTo(map);
 
 ```
 
