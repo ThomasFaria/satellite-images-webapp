@@ -93,6 +93,31 @@ export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, 
   });
 }
 
+export function createIlotBoundariesLayer(statistics) {
+  const style = {
+    fillColor: 'transparent',
+    fillOpacity: 0,
+    color: 'black',
+    weight: 2,
+    opacity: 1
+  };
+
+  const onEachFeature = (feature, layer) => {
+    const communeCode = feature.properties.depcom_2018 || 'N/A';
+    const ilotCode = feature.properties.code || 'N/A';
+    
+    layer.bindPopup(`
+      <b>Code Commune:</b> ${communeCode}<br>
+      <b>Code Îlot:</b> ${ilotCode}
+    `);
+  };
+
+  return L.geoJSON(statistics, {
+    style: style,
+    onEachFeature: onEachFeature
+  });
+}
+
 // Function to update the legend
 export function updateLegend(indicator, colorScale, quantiles, unit = '%') {
   const div = L.DomUtil.create('div', 'info legend');
@@ -120,4 +145,31 @@ export function updateLegend(indicator, colorScale, quantiles, unit = '%') {
   div.style.boxShadow = '0 0 15px rgba(0, 0, 0, 0.2)';
 
   return div;
+}
+
+
+
+export function getIlotCentroid(statistics, depcom, code) {
+  // Find the feature that matches the depcom and code
+  const feature = statistics.features.find(f => 
+    f.properties.depcom_2018 === depcom && f.properties.code === code
+  );
+
+  if (!feature) {
+    console.error(`No feature found for depcom ${depcom} and code ${code}`);
+    return null;
+  }
+
+  // Calculate the centroid of the polygon
+  const polygon = feature.geometry.coordinates[0][0]; // Assuming it's a Polygon
+  let sumX = 0, sumY = 0;
+  for (let i = 0; i < polygon.length; i++) {
+    sumX += polygon[i][0];
+    sumY += polygon[i][1];
+  }
+
+  const centroidX = sumY / polygon.length; // Latitude
+  const centroidY = sumX / polygon.length; // Longitude
+
+  return [centroidX, centroidY];
 }

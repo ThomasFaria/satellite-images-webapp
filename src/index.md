@@ -7,6 +7,12 @@ toc: false
   <h2> Petite application pour observer les performance des algorithmes de segmentation </h2>
 </div>
 
+## Sélectionnez un département
+
+- [Mayotte](/departement/mayotte)
+- [Réunion](/departement/reunion)
+
+
 <style>
 
 .hero {

@@ -1,52 +1,4 @@
-<!-- ```js
-const name = view(
-  Inputs.text({
-    label: "Name",
-    placeholder: "Enter your name",
-    value: "Anonymous"
-  })
-);
-```
 
-```js
-name
-```
-
-```js
-const search = view(Inputs.search(penguins, {placeholder: "Search penguins…"}));
-```
-
-```js
-search
-```
-
-```js
-name
-``` -->
-
-## leaflet
-
-
-```js
-const x = view(
-  Inputs.text({
-    label: "Coordonnées",
-    placeholder: "x ?",
-    value: "-12.7808"
-  })
-);
-const y = view(
-  Inputs.text({
-    label: "Coordonnées",
-    placeholder: "y ?",
-    value: "45.2276"
-  })
-);
-```
-
-```js
-var center = [Number(x), Number(y)]; // Utilisation de Number() pour la conversion numérique
-```
 ```js
 import * as L from "npm:leaflet";
 const mapDiv = display(document.createElement("div"));
@@ -82,4 +34,34 @@ map;
 L.control.layers(baseLayers).addTo(map);
 
 
-``
+```
+
+
+```js
+
+const statistics = FileAttachment("./data/clusters_statistics_mayotte.json").json()
+
+
+```
+
+
+```js
+const ilots  = statistics.features.map(feature => ({
+    depcom: feature.properties.depcom_2018,
+    code: feature.properties.code
+  }));
+
+const selectedIlot = view(
+  Inputs.select(ilots, {
+    label: "Sélectionnez un îlot",
+    format: d => `${d.depcom} - ${d.code}`,
+    value: ilots[0]
+  })
+);
+```
+
+```js
+
+
+
+```

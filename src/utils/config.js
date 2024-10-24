@@ -13,12 +13,12 @@ export const colorScales = {
 export const departementConfig = {
   mayotte: {
     name: 'MAYOTTE',
-    center: [-12.78081553844026, 45.227656507434695],
+    // center: [-12.78081553844026, 45.227656507434695],
     availableYears: ['2022','2023'],
   },
   reunion: {
     name: 'REUNION',
-    center: [-20.88545500487541, 55.452336559309124],
+    // center: [-20.88545500487541, 55.452336559309124],
     availableYears: ['2022','2023'],
   }
 };
