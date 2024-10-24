@@ -37,37 +37,30 @@ const statistics = await selec.file.json();
 <!-- # Reactivité du centre de la carte !! -->
 ```js
 // Créer la liste des îlots et la trier
-const ilots = statistics.features
-  .map(feature => ({
-    depcom: feature.properties.depcom_2018,
-    code: feature.properties.code
-  }))
-  .sort((a, b) => {
-    // Trier d'abord par depcom
-    if (a.depcom !== b.depcom) {
-      return a.depcom.localeCompare(b.depcom);
-    }
-    // Si les depcom sont identiques, trier par code
-    return a.code.localeCompare(b.code);
-  });
+// const ilots = statistics.features
+//   .map(feature => ({
+//     depcom: feature.properties.depcom_2018,
+//     code: feature.properties.code
+//   }))
+//   .sort((a, b) => {
+//     // Trier d'abord par depcom
+//     if (a.depcom !== b.depcom) {
+//       return a.depcom.localeCompare(b.depcom);
+//     }
+//     // Si les depcom sont identiques, trier par code
+//     return a.code.localeCompare(b.code);
+//   });
 
-// Créer le sélecteur avec la liste triée
-const selectedIlot = view(
-  Inputs.select(ilots, {
-    label: "Sélectionnez un îlot",
-    format: d => `${d.depcom} - ${d.code}`,
-    value: ilots[0]
-  })
-);
+// // Créer le sélecteur avec la liste triée
+// const selectedIlot = view(
+//   Inputs.select(ilots, {
+//     label: "Sélectionnez un îlot",
+//     format: d => `${d.depcom} - ${d.code}`,
+//     value: ilots[0]
+//   })
+// );
 
-```
-<!-- # Bien séparer l'obtention de la valeur choisie de la définition du choix ! -->
-```js
-const center = getIlotCentroid(
-  statistics,
-  selectedIlot.depcom,
-  selectedIlot.code
-)
+
 ```
 
 ```js
@@ -202,24 +195,37 @@ map.on('overlayremove', function (eventLayer) {
 const statistics_props = statistics.features.map(f => ({
       depcom_2018: f.properties.depcom_2018,
       code: f.properties.code,
-      building_2023: f.properties.building_2023.toFixed(0),
-      pct_building_2023: f.properties.pct_building_2023.toFixed(0),
-      area_building_change_absolute:f.properties.area_building_change_absolute.toFixed(0),
-      area_building_change_relative:f.properties.area_building_change_relative.toFixed(1),
+      building_2023: f.properties.building_2023,
+      pct_building_2023: f.properties.pct_building_2023,
+      area_building_change_absolute:f.properties.area_building_change_absolute,
+      area_building_change_relative:f.properties.area_building_change_relative,
     }))
-const search = view(Inputs.search(statistics_props, {placeholder: "chercher îlot…"}));
+const placeholder_commune = statistics_props[0].depcom_2018
+const placeholder_ilot = statistics_props[0].code
+const placeholder_param = placeholder_commune + " " + placeholder_ilot
+const search = view(
+  Inputs.search(statistics_props, 
+  {
+    placeholder: placeholder_param,
+    columns:["depcom_2018","code"]
+  })
+  );
 ```
 
+<!-- # Bien séparer l'obtention de la valeur choisie de la définition du choix ! -->
 ```js
+const center = getIlotCentroid(
+    statistics,
+    search[0]?.depcom_2018 || placeholder_commune,
+    search[0]?.code || placeholder_ilot
+  )
+```
+
+
+```js
+console.log(search[0])
 const table = view(
-  Inputs.table(statistics.features.map(f => ({
-    depcom_2018: f.properties.depcom_2018,
-    code: f.properties.code,
-    building_2023: parseFloat(f.properties.building_2023),
-    pct_building_2023: parseFloat(f.properties.pct_building_2023),
-    area_building_change_absolute: parseFloat(f.properties.area_building_change_absolute),
-    area_building_change_relative: parseFloat(f.properties.area_building_change_relative)
-  })), {
+  Inputs.table(search, {
     columns: ['depcom_2018', 'code', 'building_2023', 'pct_building_2023', 'area_building_change_absolute', 'area_building_change_relative'],
     header: {
       depcom_2018: 'Code Commune',
@@ -238,10 +244,10 @@ const table = view(
       area_building_change_relative: 120
     },
     format: {
-      building_2023: x => x.toLocaleString('fr-FR', { maximumFractionDigits: 0 }),
-      pct_building_2023: x => x.toLocaleString('fr-FR', { maximumFractionDigits: 0 }),
-      area_building_change_absolute: x => x.toLocaleString('fr-FR', { maximumFractionDigits: 0 }),
-      area_building_change_relative: x => x.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+      building_2023: x => Math.round(x),
+      pct_building_2023: x => Math.round(x),
+      area_building_change_absolute: x => Math.round(x),
+      area_building_change_relative: x => (Math.round(x * 10) / 10)
     },
     sort: {
       column: 'depcom_2018',
@@ -249,7 +255,7 @@ const table = view(
     },
     rows: 10
   })
-);
+)
 ```
 <!-- 
 ```js
