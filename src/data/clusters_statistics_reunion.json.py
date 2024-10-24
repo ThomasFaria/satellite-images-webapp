@@ -8,4 +8,3 @@ file_paths = {
 data = creer_donnees_comparaison(file_paths)
 print(data.to_json())
 
-data
