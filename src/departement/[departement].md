@@ -135,16 +135,16 @@ const labels = [
 // Assuming statistics, map, availableYears, name, quantileProbs, and colorScales are already defined
 
 // Create and add GeoJSON layers
-let isFirstLayer = true;
+// let isFirstLayer = true;
 for (const { indicator, label, colorScale, unit } of labels) {
   const geojsonLayer = createGeoJsonLayer(statistics, indicator, label, quantileProbs, colorScales[colorScale], unit);
   overlays[label] = geojsonLayer;
 
   // Add only the first layer to the map by default
-  if (isFirstLayer) {
-    geojsonLayer.addTo(map);
-    isFirstLayer = false;
-  }
+  // if (isFirstLayer) {
+  //   geojsonLayer.addTo(map);
+  //   isFirstLayer = false;
+  // }
 }
  overlays["Contours des îlots"] = ilotBoundariesLayer.addTo(map);
 
