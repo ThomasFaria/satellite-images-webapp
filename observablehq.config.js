@@ -14,14 +14,12 @@ export default {
           {name: "Reunion", path: "/departement/reunion"}
         ]
       },
-      // {
-      //   name: "Non Dynamique",
-      //   pages: [
-      //     {name: "Mayotte", path: "/1.Mayotte"},
-      //     {name: "slider", path: "/slider"},
-      //     {name: "test", path: "/test"}
-      //   ]
-      // }
+      {
+        name: "Exemples minimaux",
+        pages: [
+          {name: "Selectinputs", path: "test"},
+        ]
+      }
     ],
   // Content to add to the head of the page, e.g. for a favicon:
   head: '<link rel="icon" href="observable.png" type="image/png" sizes="32x32">',

@@ -11,7 +11,7 @@ function formatDepartementName(nom) {
 }
 
 // Crée un élément h1 avec le nom du département
-const titre = html`<h1>Cartographie de ${formatDepartementName(departement)}</h1>`;
+const titre = html`<h1>Informations géographiques : ${formatDepartementName(departement)}</h1>`;
 
 display(titre);
 ```
@@ -19,7 +19,7 @@ display(titre);
 
 ```js
 // Importation de Leaflet depuis npm pour gérer la carte
-//import * as L from "npm:leaflet";
+import * as L from "npm:leaflet";
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.6.1/dist/d3.min.js";
 import { calculateQuantiles, getColor, createStyle, onEachFeature, getWMSTileLayer,createGeoJsonLayer,updateLegend} from "../utils/fonctions.js";
 import { quantileProbs, colorScales, departementConfig } from '../utils/config.js';
