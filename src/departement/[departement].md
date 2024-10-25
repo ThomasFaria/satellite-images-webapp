@@ -1,4 +1,4 @@
-```js
+<!-- ```js
 // Get the department from the URL parameter
 const departement = new URL(window.location.href).pathname.split('/').pop();
 console.log(`The current department is ${departement}`);
@@ -151,6 +151,7 @@ for (const { indicator, label, colorScale, unit } of labels) {
 ```
 
 ```js
+
 // Layer controls
 L.control.layers(baseLayers, overlays).addTo(map);
 
@@ -297,4 +298,4 @@ Inputs.table(
       rows: 10
   }
 )
-```  -->
+```  --> -->

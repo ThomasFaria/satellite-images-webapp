@@ -2,40 +2,42 @@
 title: slider
 ---
 
+<!-- ```js
+import {require} from "npm:d3-require";
+var sideBySide = require('leaflet-side-by-side')
+console.log(sideBySide)
+``` -->
+
+<!-- <link rel="modulepreload" href="./leaflet-side-by-side.js"> -->
+
 ```js
-//import * as L from "npm:leaflet@1.9.4";
-// Importer Leaflet depuis le CDN et le rendre global
-import { L } from 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-window.L = L;
 
-// Importer le plugin leaflet-side-by-side en utilisant index.js
-await import('https://unpkg.com/leaflet-side-by-side@2.2.0/index.js');
+const div = display(document.createElement("div"));
+div.style = "height: 400px;";
 
-// Inclure les fichiers CSS nécessaires
-html`<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">`;
-html`<link rel="stylesheet" href="https://unpkg.com/leaflet-side-by-side@2.2.0/leaflet-side-by-side.css">`;
+const map = L.map(div)
+  .setView([51.505, -0.09], 13);
 
-// Créer le conteneur de la carte
-const mapDiv = html`<div id="map" style="width: 100%; height: 600px;"></div>`;
+// Create map panes
+map.createPane('left');
+map.createPane('right');
 
-// Initialiser la carte et ajouter les couches
-// Initialiser la carte centrée sur votre localisation
-const map = L.map(mapDiv).setView([-12.78081553844026, 45.227656507434695], 14);
+var openstreetmap = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  pane: 'left',
+})
+  .addTo(map);
 
-// Définir la couche "Avant" (par exemple, données de 2022)
-const layerBefore = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-attribution: '&copy; OpenStreetMap contributors',
+var googleSat =L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    pane: 'right',
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
 }).addTo(map);
 
-// Définir la couche "Après" (par exemple, données de 2023)
-const layerAfter = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-attribution: '&copy; OpenTopoMap contributors',
-}).addTo(map);
-
-// Ajouter le contrôle side-by-side
-const sideBySide = L.control.sideBySide(layerBefore, layerAfter).addTo(map);
-
-// Retourner la carte pour l'afficher
-map;
-
+L.marker([51.5, -0.09])
+  .addTo(map)
+  .bindPopup("A nice popup<br> indicating a point of interest.")
+  .openPopup();
+console.log("run side by side", L.control.sideBySide)
+L.control.sideBySide(openstreetmap, googleSat).addTo(map);
 ```

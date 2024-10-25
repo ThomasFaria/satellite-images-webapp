@@ -15,7 +15,7 @@
     "leaflet": "^1.9.4",
     "leaflet-side-by-side": "^1.1.0",
     "util": "^0.12.5",
-    "utils": "^0.3.1"
+    "utils": "^0.2.2"
   },
   "devDependencies": {
     "rimraf": "^5.0.5"
