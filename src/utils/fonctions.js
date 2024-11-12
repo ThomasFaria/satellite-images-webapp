@@ -35,7 +35,7 @@ export function generateStyleFunction(indicator, quantiles, colorScale) {
 }
 
 // Function to get a WMS Tile Layer
-export function getWMSTileLayer(layer, styleName = null, opacity = 1) {
+export function getWMSTileLayer(layer, year = null, styleName = null, opacity = 1) {
   const url = 'https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms';
   const geoserverWorkspace = 'dirag';
 
@@ -46,11 +46,11 @@ export function getWMSTileLayer(layer, styleName = null, opacity = 1) {
     transparent: true,
     version: '1.1.0',
     opacity: opacity,
-    attribution: 'GeoServer'
   };
-  
   if (styleName) {
     wmsOptions.styles = styleName;
+  } else  {
+    wmsOptions.attribution = `Pleiades &copy; CNES_${year}, Distribution AIRBUS DS`;
   }
   // Return the tile layer with the WMS options
   return L.tileLayer.wms(url, wmsOptions);

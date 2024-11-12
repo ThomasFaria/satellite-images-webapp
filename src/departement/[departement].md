@@ -107,8 +107,8 @@ map.addLayer(ilotBoundariesLayer);
 
 // Définition des couches de base
 const baseLayers = {
-  'Clair': baseLayer,
-  'Sombre': darkBaseLayer,
+  'OpenStreetMap clair': baseLayer,
+  'OpenStreetMap sombre': darkBaseLayer,
 };
 ```
 
@@ -118,10 +118,10 @@ const overlays = {};
 const styleNames = ["contour_rouge","contour_bleu"]
 
 availableYears.forEach((year, index) => {
-  const pleiadesLayer = getWMSTileLayer(`${name}_${year}`);
-  overlays[`PLEIADES ${year}`] = pleiadesLayer;
+  const pleiadesLayer = getWMSTileLayer(`${name}_${year}`, year);
+  baseLayers[`Pleiades ${year}`] = pleiadesLayer;
   
-  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`, styleNames[index]);
+  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`, null, styleNames[index]);
   overlays[`Prédiction ${year}`] = predictionLayer;
 });
 // Labels and indicators with associated units
@@ -200,6 +200,14 @@ map.on('overlayremove', function (eventLayer) {
     map.removeControl(legend);
   }
 });
+
+// const stats = view(
+//   Inputs.select(
+//     labels.map(label => label.label),
+//     {unique: true, label: "Statistiques d'évolutions"}
+//   )
+// );
+
 ```
 
 ```js
