@@ -10,8 +10,12 @@ export default {
         name: "Departements",
         path: "/departement/",
         pages: [
+          {name: "Guadeloupe", path: "/departement/guadeloupe"},
+          {name: "Guyane", path: "/departement/guyane"},
+          {name: "La Réunion", path: "/departement/reunion"},
+          {name: "Martinique", path: "/departement/martinique"},
           {name: "Mayotte", path: "/departement/mayotte"},
-          {name: "Reunion", path: "/departement/reunion"}
+          {name: "Saint-Martin", path: "/departement/saint-martin"}
         ]
       },
       // {

@@ -9,9 +9,12 @@ toc: false
 
 ## Sélectionnez un département
 
+- [Guadeloupe](/departement/guadeloupe)
+- [Guyane](/departement/guyane)
+- [La Réunion](/departement/reunion)
+- [Martinique](/departement/martinique)
 - [Mayotte](/departement/mayotte)
-- [Réunion](/departement/reunion)
-
+- [Saint-Martin](/departement/saint-martin)
 
 <style>
 
