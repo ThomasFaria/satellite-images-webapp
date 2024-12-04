@@ -1,4 +1,5 @@
 // config.js
+import {FileAttachment} from "observablehq:stdlib";
 
 export const quantileProbs = [0, 0.25, 0.5, 0.75, 1.0];
 
@@ -10,33 +11,52 @@ export const colorScales = {
 };
 
 // Configuration des départements avec des coordonnées spécifiques et des couches supplémentaires
-export const departementConfig = {
+export const departmentConfig = {
   guadeloupe: {
     name: "GUADELOUPE",
     availableYears: ["2018", "2019", "2020","2022"],
+    center: [16.238104315569817, -61.53360948223629],
+
   },
   guyane: {
     name: "GUYANE",
     availableYears: ["2022","2023"],
+    center: [4.939431292357986, -52.331352519102815],
+
   },
   reunion: {
     name: "REUNION",
     // center: [-20.88545500487541, 55.452336559309124],
     availableYears: ["2018", "2022","2023"],
-    dataFile: '../data/clusters_statistics_reunion.json',
+    dataFile: () => FileAttachment('../data/clusters_statistics_reunion.json'),
+    center: [-20.88545500487541, 55.452336559309124],
   },
   martinique: {
     name: "MARTINIQUE",
     availableYears: ["2018","2022"],
+    center: [14.605520170868523, -61.06995677007423],
+
   },
   mayotte: {
     name: "MAYOTTE",
     // center: [-12.78081553844026, 45.227656507434695],
     availableYears: ["2017", "2019", "2020", "2022", "2023", "2024"],
-    dataFile: '../data/clusters_statistics_mayotte.json',
+    dataFile: () => FileAttachment('../data/clusters_statistics_mayotte.json'),
+    center: [-12.78081553844026, 45.227656507434695],
   },
   "saint-martin": {
     name: "SAINT-MARTIN",
     availableYears: ["2024"],
+    center: [18.070744391845302, -63.080322797579946],
+
   }
 };
+
+export function getConfig(department) {
+  const config = departmentConfig[department];
+  if (!config) {
+    console.error(`Department ${department} does not exist in the configuration.`);
+    return null;
+  }
+  return config
+}

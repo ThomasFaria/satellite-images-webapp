@@ -1,14 +1,16 @@
 // departmentUtils.js
 import * as L from "npm:leaflet";
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.6.1/dist/d3.min.js";
+
+import {departmentConfig} from "./config.js";
 
 export class DepartmentMapVisualizer {
-  constructor(department) {
-    if (!DEPARTMENTS[department]) {
+  constructor(div, department) {
+    if (!departmentConfig[department]) {
       throw new Error(`Department ${department} not configured`);
     }
     this.department = department;
-    this.config = DEPARTMENTS[department];
+    this.div = div;
+    this.config = departmentConfig[department];
     this.statistics = null;
     this.map = null;
     this.layers = {
@@ -18,17 +20,22 @@ export class DepartmentMapVisualizer {
   }
 
   async initializeData() {
-    const response = await fetch(this.config.dataFile);
-    this.statistics = await response.json();
+    try {
+      if (this.config.dataFile) {
+        const fileAttachment = this.config.dataFile();
+        this.statistics = await fileAttachment.json();
+      }
+    } catch (dataLoadError) {
+      console.warn(`No data file found for ${this.department}:`, dataLoadError);
+    }
+  
   }
 
-  createMap(containerId) {
-    this.map = L.map(containerId).setView(this.config.center, 10);
+  createMap() {
+    this.map = L.map(this.div).setView(this.config.center, 10);
+
+    // Add base layers
     this.addBaseLayers();
-    this.addYearLayers();
-    this.addStatisticsLayers();
-    this.addLayerControls();
-    this.setupLegend();
   }
 
   addBaseLayers() {
