@@ -34,27 +34,6 @@ export function generateStyleFunction(indicator, quantiles, colorScale) {
   };
 }
 
-// Function to get a WMS Tile Layer
-export function getWMSTileLayer(layer, year = null, styleName = null, opacity = 1) {
-  const url = 'https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms';
-  const geoserverWorkspace = 'dirag';
-
-  // Initialize the wmsOptions object with the style parameter
-  const wmsOptions = {
-    layers: `${geoserverWorkspace}:${layer}`,
-    format: 'image/png',
-    transparent: true,
-    version: '1.1.0',
-    opacity: opacity,
-  };
-  if (styleName) {
-    wmsOptions.styles = styleName;
-  } else  {
-    wmsOptions.attribution = `Pleiades &copy; CNES_${year}, Distribution AIRBUS DS`;
-  }
-  // Return the tile layer with the WMS options
-  return L.tileLayer.wms(url, wmsOptions);
-}
 
 // General function to create a GeoJSON layer with a specific indicator and unit
 export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, colorScale, unit = '%') {
@@ -93,30 +72,6 @@ export function createGeoJsonLayer(statistics, indicator, label, quantileProbs, 
   });
 }
 
-export function createIlotBoundariesLayer(statistics) {
-  const style = {
-    fillColor: 'transparent',
-    fillOpacity: 0,
-    color: 'black',
-    weight: 2,
-    opacity: 1
-  };
-
-  const onEachFeature = (feature, layer) => {
-    const communeCode = feature.properties.depcom_2018 || 'N/A';
-    const ilotCode = feature.properties.code || 'N/A';
-    
-    layer.bindPopup(`
-      <b>Code Commune:</b> ${communeCode}<br>
-      <b>Code Îlot:</b> ${ilotCode}
-    `);
-  };
-
-  return L.geoJSON(statistics, {
-    style: style,
-    onEachFeature: onEachFeature
-  });
-}
 
 // Function to update the legend
 export function updateLegend(indicator, colorScale, quantiles, unit = '%') {
@@ -148,8 +103,7 @@ export function updateLegend(indicator, colorScale, quantiles, unit = '%') {
 }
 
 
-
-export function getIlotCentroid(statistics, depcom, code) {
+export function getClusterCentroid(statistics, depcom, code) {
   // Find the feature that matches the depcom and code
   const feature = statistics.features.find(f => 
     f.properties.depcom_2018 === depcom && f.properties.code === code
