@@ -115,7 +115,7 @@ const baseLayers = {
 ```js
 const overlays = {};
 // Adding layers for available years
-const styleNames = ["contour_rouge","contour_bleu"]
+const styleNames = ["contour_rouge","contour_bleu" ,"contour_orange"]
 
 availableYears.forEach((year, index) => {
   const pleiadesLayer = getWMSTileLayer(`${name}_${year}`, year);
