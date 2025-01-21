@@ -46,6 +46,7 @@ export function getWMSTileLayer(layer, year = null, styleName = null, opacity = 
     transparent: true,
     version: '1.1.0',
     opacity: opacity,
+    maxZoom: 21,
   };
   if (styleName) {
     wmsOptions.styles = styleName;

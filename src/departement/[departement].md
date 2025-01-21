@@ -73,8 +73,11 @@ const mapDiv = display(document.createElement("div"));
 mapDiv.style = "height: 600px; width: 100%; margin: 0 auto;";
 
 // Initialiser la carte avec la position centrale du département
-const map = L.map(mapDiv).setView(center, 17);
-
+const map = L.map(mapDiv, {
+            center: center,
+            zoom: 17,           
+            maxZoom: 21 //(or even higher)
+        });
 
 // Créer un icône personnalisé pour le marqueur
 const crossIcon = L.divIcon({
@@ -89,13 +92,14 @@ L.marker(center, { icon: crossIcon }).addTo(map);
 // Ajout d'une couche de base OpenStreetMap
 const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors',
+  maxZoom: 21,
 });
 
 // Ajout d'une couche de base sombre pour le mode sombre
 const darkBaseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; OpenStreetMap contributors &copy; CartoDB',
   subdomains: 'abcd',
-  maxZoom: 19,
+    maxZoom: 21,
 });
 
 // Ajouter la couche de base par défaut
@@ -115,13 +119,11 @@ const baseLayers = {
 ```js
 const overlays = {};
 // Adding layers for available years
-const styleNames = ["contour_rouge","contour_bleu" ,"contour_orange"]
-
 availableYears.forEach((year, index) => {
   const pleiadesLayer = getWMSTileLayer(`${name}_${year}`, year);
   baseLayers[`Pleiades ${year}`] = pleiadesLayer;
   
-  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`, null, styleNames[index]);
+  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`, null, `contour_${index}`);
   overlays[`Prédiction ${year}`] = predictionLayer;
 });
 // Labels and indicators with associated units

@@ -14,7 +14,7 @@ export const departementConfig = {
   mayotte: {
     name: 'MAYOTTE',
     // center: [-12.78081553844026, 45.227656507434695],
-    availableYears: ['2022','2023', '2024'],
+    availableYears: ['2017', '2018', '2019', '2020', '2021','2022','2023', '2024'],
   },
   reunion: {
     name: 'REUNION',
