@@ -123,7 +123,7 @@ availableYears.forEach((year, index) => {
   const pleiadesLayer = getWMSTileLayer(`${name}_${year}`, year);
   baseLayers[`Pleiades ${year}`] = pleiadesLayer;
   
-  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`, null, `contour_${index}`);
+  const predictionLayer = getWMSTileLayer(`${name}_PREDICTIONS_${year}`, null, `contour_${index+1}`);
   overlays[`Prédiction ${year}`] = predictionLayer;
 });
 // Labels and indicators with associated units
