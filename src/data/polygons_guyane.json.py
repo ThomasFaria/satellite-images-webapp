@@ -20,7 +20,7 @@ con.execute(
     """
 )
 
-URL_GUYANE_2024 = "projet-slums-detection/data-raw/PLEIADES/GUYANE_brut/polygones_images_brutes_2024.parquet"
+URL_GUYANE_2024 = "projet-slums-detection/data-raw/PLEIADES/GUYANE_brut/polygones_images_brutes_2024_no_preproc.parquet"
 # Charger les données depuis le Parquet
 df = con.execute(f"SELECT * FROM read_parquet('s3://{URL_GUYANE_2024}')").fetchdf()
 con.close()
