@@ -1,7 +1,7 @@
 ```js
 import * as L from "npm:leaflet";
 const mapDiv = display(document.createElement("div"));
-mapDiv.style = "height: 400px; width: 100%; margin: 0 auto;";
+mapDiv.style = "height: 80vh; width: 100%; margin: 0 auto;";
 
 // Initialiser la carte avec la position centrale du département
 const center = [4.937, -52.330]; // Coordonnées centrales de la Guyane française
