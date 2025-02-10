@@ -20,5 +20,10 @@ export const departementConfig = {
     name: 'REUNION',
     // center: [-20.88545500487541, 55.452336559309124],
     availableYears: ['2022','2023'],
+  },
+  guadeloupe: {
+    name: 'GUADELOUPE',
+    // center: [-20.88545500487541, 55.452336559309124],
+    availableYears: ['2020','2022'],
   }
 };

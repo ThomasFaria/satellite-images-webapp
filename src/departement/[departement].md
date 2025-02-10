@@ -27,40 +27,11 @@ import { quantileProbs, colorScales, departementConfig } from '../utils/config.j
 const files = [
   {id: "mayotte", file: FileAttachment("../data/clusters_statistics_mayotte.json")},
   {id: "reunion", file: FileAttachment("../data/clusters_statistics_reunion.json")},
+  {id: "guadeloupe", file: FileAttachment("../data/clusters_statistics_guadeloupe.json")}
 ]
 // Trouve le fichier correspondant au département
 const selec = files.find(f => f.id === departement);
 const statistics = await selec.file.json();
-```
-
-
-<!-- # Reactivité du centre de la carte !! -->
-```js
-// Créer la liste des îlots et la trier
-// const ilots = statistics.features
-//   .map(feature => ({
-//     depcom: feature.properties.depcom_2018,
-//     code: feature.properties.code
-//   }))
-//   .sort((a, b) => {
-//     // Trier d'abord par depcom
-//     if (a.depcom !== b.depcom) {
-//       return a.depcom.localeCompare(b.depcom);
-//     }
-//     // Si les depcom sont identiques, trier par code
-//     return a.code.localeCompare(b.code);
-//   });
-
-// // Créer le sélecteur avec la liste triée
-// const selectedIlot = view(
-//   Inputs.select(ilots, {
-//     label: "Sélectionnez un îlot",
-//     format: d => `${d.depcom} - ${d.code}`,
-//     value: ilots[0]
-//   })
-// );
-
-
 ```
 
 ```js
