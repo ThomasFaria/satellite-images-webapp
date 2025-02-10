@@ -2,6 +2,7 @@ import os
 import geopandas as gpd
 import s3fs
 import numpy as np
+from pyproj import CRS
 
 
 def merge_gdfs(gdfs, id_columns, value_columns):
@@ -71,3 +72,15 @@ def creer_donnees_comparaison(file_paths):
     final_gdf_cleaned = merged_gdf.replace([np.nan, np.inf, -np.inf], 0)
 
     return (final_gdf_cleaned[ordered_columns].set_index("ident_ilot").to_crs("EPSG:4326"))
+
+
+# Fonction pour reprojeter selon le CRS déclaré
+def reproject_geometry(geometry, crs_string, crs_target):
+    try:
+        # Essayer de lire le CRS
+        src_crs = CRS.from_user_input(crs_string)
+        tgt_crs = CRS.from_epsg(crs_target)
+        return gpd.GeoSeries([geometry], crs=src_crs).to_crs(tgt_crs).iloc[0]
+    except Exception as e:
+        print(f"⚠️ Problème avec le CRS {crs_string}: {e}")
+        return None

@@ -18,12 +18,12 @@ export default {
           {name: "Saint-Martin", path: "/departement/saint-martin"}
         ]
       },
-      // {
-      //   name: "Exemples minimaux",
-      //   pages: [
-      //     {name: "Selectinputs", path: "test"},
-      //   ]
-      // }
+      {
+        name: "Prises de vue des images Pléïades",
+        pages: [
+          {name: "Guyane 2024", path: "polygons_guyane_2024"},
+        ]
+      }
     ],
   // Content to add to the head of the page, e.g. for a favicon:
   head: '<link rel="icon" href="observable.png" type="image/png" sizes="32x32">',
