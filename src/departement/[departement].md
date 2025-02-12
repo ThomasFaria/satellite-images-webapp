@@ -17,7 +17,8 @@ display(titre);
 ```js
 import {loadDepartmentGeom, loadDepartmentLevel, loadDepartmentEvol} from "../components/loaders.js";
 import {getConfig} from "../components/config.js";
-import {getOSM, getOSMDark, getMarker, getSatelliteImages, getPredictions, getClusters} from "../components/map-layers.js";
+import {getOSM, getOSMDark, getMarker, getSatelliteImages, getPredictions, getClusters, getEvolutions} from "../components/map-layers.js";
+import * as aq from "npm:arquero";
 ```
 
 
@@ -28,53 +29,13 @@ const level = await loadDepartmentLevel(department);
 const evol = await loadDepartmentEvol(department);
 ```
 
-```js
-configg
-```
-
-```js
-{
-  'OpenStreetMap clair': OSM['OpenStreetMap clair'],
-  'OpenStreetMap sombre': OSMDark['OpenStreetMap sombre'],
-  }
-
-```
-
-```js
-geom
-```
-
-```js
-PREDICTIONS
-```
-
-```js
-Inputs.table(evol)
-```
-
-
 ## Analyse des îlots
 
 
 ```js
-
-// Initialisation de la carte Leaflet
-const mapDiv = display(document.createElement("div"));
-mapDiv.style = "height: 600px; width: 100%; margin: 0 auto;";
-
-// Initialiser la carte avec la position centrale du département
-const map2 = L.map(mapDiv, {
-            center: center,
-            zoom: 17,           
-            maxZoom: 21 //(or even higher)
-        });
-
-
-
-// Ajout d'une couche de base OpenStreetMap
+// Récupération des différentes couches de la carte
 const OSM = getOSM();
 
-// Ajout d'une couche de base sombre pour le mode sombre
 const OSMDark  = getOSMDark();
 
 const marker = getMarker(center);
@@ -83,12 +44,20 @@ const PLEIADES =  getSatelliteImages(configg);
 
 const PREDICTIONS =  getPredictions(configg);
 
-
 const BORDERS = getClusters(geom);
 
+///// Initialisation de la carte Leaflet
+const mapDiv = display(document.createElement("div"));
+mapDiv.style = "height: 600px; width: 100%; margin: 0 auto;";
+const map2 = L.map(mapDiv, {
+            center: center,
+            zoom: 17,           
+            maxZoom: 21 
+        });
 
-// Ajout de la couche de base par défaut
+// Ajout des couches par défaut
 OSM['OpenStreetMap clair'].addTo(map2);
+BORDERS['Contours des îlots'].addTo(map2);
 
 // Ajouter le marqueur à la carte
 marker.addTo(map2);
@@ -102,6 +71,78 @@ L.control.layers({
   ...PREDICTIONS,
   ...BORDERS,
 }).addTo(map2);
+
+```
+
+
+## Analyse des évolutions
+
+```js
+Inputs.table([...evol].filter(d => (d.year_start === year1) & (d.year_end === year2)))
+```
+
+```js
+const filtered_data = [...evol].filter(d => (d.year_start === year1) & (d.year_end === year2))
+```
+
+```js
+const geomCopy = structuredClone(geom); // Modern method
+
+geomCopy.features = geomCopy.features.map(feature => {
+  const match = filtered_data.find(row => 
+    row.code === feature.properties.code && row.depcom_2018 === feature.properties.depcom_2018
+  );
+  
+  return match 
+    ? { ...feature, properties: { ...feature.properties, ...match } } 
+    : feature;
+});
+```
+
+```js 
+const EVOLUTIONS_ABS = getEvolutions(geomCopy, "evol_abs")
+```
+
+```js
+2+4
+```
+
+```js
+// Récupération des différentes couches de la carte
+const OSM = getOSM();
+
+const marker = getMarker(center);
+
+const BORDERS = getClusters(geom);
+
+const year1 = "2017"
+const year2 = "2023"
+
+///// Initialisation de la carte Leaflet
+const mapDiv = display(document.createElement("div"));
+mapDiv.style = "height: 600px; width: 100%; margin: 0 auto;";
+const map3 = L.map(mapDiv, {
+            center: center,
+            zoom: 17,           
+            maxZoom: 21 
+        });
+
+// Ajout des couches par défaut
+OSM['OpenStreetMap clair'].addTo(map3);
+BORDERS['Contours des îlots'].addTo(map3);
+
+// Ajouter le marqueur à la carte
+marker.addTo(map3);
+
+
+L.control.layers({
+  ...OSM,
+  // ...OSMDark,
+  // ...PLEIADES,
+  },{
+  // ...EVOLUTIONS_ABS,
+  ...BORDERS,
+}).addTo(map3);
 
 ```
 
