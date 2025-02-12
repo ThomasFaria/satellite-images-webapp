@@ -164,8 +164,7 @@ const overlays_pred = {
 L.control.layers({
   ...OSM,
   ...OSMDark,
-  ...PLEIADES,
-  ...BORDERS
+  ...PLEIADES
   },
   overlays_pred
   ).addTo(map2);
