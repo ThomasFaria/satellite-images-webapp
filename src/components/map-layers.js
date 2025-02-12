@@ -31,11 +31,13 @@ export function getMarker(center) {
 export function getSatelliteImages(config) {
     const { availableYears, name } = config;
     const satelliteImages = {};
+    const urlGeoServer = "https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms";
+    const workSpace = "dirag";
 
     // Get tile for each year
     availableYears.forEach(year => {
-        const layer = L.tileLayer.wms("https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms", {
-            layers: `dirag:${name}_${year}`,
+        const layer = L.tileLayer.wms(urlGeoServer, {
+            layers: `${workSpace}:${name}_${year}`,
             format: 'image/png',
             transparent: true,
             version: '1.1.0',
@@ -49,3 +51,51 @@ export function getSatelliteImages(config) {
     return satelliteImages;
 }
 
+export function getPredictions(config) {
+    const { availableYears, name } = config;
+    const predictions = {};
+    const urlGeoServer = "https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms";
+    const workSpace = "dirag";
+
+    // Get tile for each year
+    availableYears.forEach(year => {
+        const layer = L.tileLayer.wms(urlGeoServer, {
+            layers: `${workSpace}:${name}_PREDICTIONS_${year}`,
+            format: 'image/png',
+            transparent: true,
+            version: '1.1.0',
+            opacity: 1,
+            maxZoom: 21,
+            styles : "" // TODO: USE STYLE FOR MULTICLASS
+        });
+        predictions[`Prédictions ${year}`] = layer;
+    });
+
+    return predictions;
+}
+
+export function getClusters(geomData) {
+
+    const addToolTip = (feature, layer) => {
+        const communeCode = feature.properties.depcom_2018 || 'N/A';
+        const ilotCode = feature.properties.code || 'N/A';
+        
+        layer.bindPopup(`
+          <b>Code Commune:</b> ${communeCode}<br>
+          <b>Code Îlot:</b> ${ilotCode}
+        `);
+      };
+    
+    const borders = L.geoJSON(geomData, {
+        style: {
+        fillColor: 'transparent',
+        fillOpacity: 0,
+        color: 'black',
+        weight: 2,
+        opacity: 1
+      },
+        onEachFeature: addToolTip
+      })
+
+    return {"Contours des îlots": borders};
+}

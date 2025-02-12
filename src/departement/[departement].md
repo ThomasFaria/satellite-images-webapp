@@ -17,7 +17,7 @@ display(titre);
 ```js
 import {loadDepartmentGeom, loadDepartmentLevel, loadDepartmentEvol} from "../components/loaders.js";
 import {getConfig} from "../components/config.js";
-import {getOSM, getOSMDark, getMarker, getSatelliteImages} from "../components/map-layers.js";
+import {getOSM, getOSMDark, getMarker, getSatelliteImages, getPredictions, getClusters} from "../components/map-layers.js";
 ```
 
 
@@ -37,10 +37,15 @@ configg
   'OpenStreetMap clair': OSM['OpenStreetMap clair'],
   'OpenStreetMap sombre': OSMDark['OpenStreetMap sombre'],
   }
+
 ```
 
 ```js
-[...level]
+geom
+```
+
+```js
+PREDICTIONS
 ```
 
 ```js
@@ -76,39 +81,10 @@ const marker = getMarker(center);
 
 const PLEIADES =  getSatelliteImages(configg);
 
+const PREDICTIONS =  getPredictions(configg);
 
 
-const predictions =  L.tileLayer.wms("https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms", {
-      layers: `dirag:MAYOTTE_PREDICTIONS_2022`,
-      format: 'image/png',
-      transparent: true,
-      version: '1.1.0',
-      opacity: 1,
-      maxZoom: 21,
-    })
-
-
-const addToolTip = (feature, layer) => {
-    const communeCode = feature.properties.depcom_2018 || 'N/A';
-    const ilotCode = feature.properties.code || 'N/A';
-    
-    layer.bindPopup(`
-      <b>Code Commune:</b> ${communeCode}<br>
-      <b>Code Îlot:</b> ${ilotCode}
-    `);
-  };
-
-
-const borders = L.geoJSON(geom, {
-    style: {
-    fillColor: 'transparent',
-    fillOpacity: 0,
-    color: 'black',
-    weight: 2,
-    opacity: 1
-  },
-    onEachFeature: addToolTip
-  })
+const BORDERS = getClusters(geom);
 
 
 // Ajout de la couche de base par défaut
@@ -123,28 +99,11 @@ L.control.layers({
   ...OSMDark,
   ...PLEIADES,
   },{
-  'Prédictions 2022': predictions,
-  "Contours des îlots": borders,
+  ...PREDICTIONS,
+  ...BORDERS,
 }).addTo(map2);
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
