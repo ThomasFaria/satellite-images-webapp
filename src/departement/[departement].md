@@ -1,12 +1,12 @@
-
 ```js
 import {loadDepartmentGeom, loadDepartmentLevel, loadDepartmentEvol} from "../components/loaders.js";
 import {getConfig} from "../components/config.js";
-import {getOSM, getOSMDark, getMarker, getSatelliteImages} from "../components/map-layers.js";
 import {transformData} from "../components/build-table.js";
 import {getIlotCentroid} from "../utils/fonctions.js";
-```
+import {getOSM, getOSMDark, getMarker, getSatelliteImages, getPredictions, getClusters, getEvolutions} from "../components/map-layers.js";
+import * as aq from "npm:arquero";
 
+```
 ```js
 // Get the department from the URL parameter
 const department = new URL(window.location.href).pathname.split('/').pop();
@@ -21,13 +21,6 @@ function formatdepartmentName(nom) {
 // Crée un élément h1 avec le nom du département
 const titre = html`<h1>Informations géographiques : ${formatdepartmentName(department)}</h1>`;
 display(titre);
-```
-
-```js
-import {loadDepartmentGeom, loadDepartmentLevel, loadDepartmentEvol} from "../components/loaders.js";
-import {getConfig} from "../components/config.js";
-import {getOSM, getOSMDark, getMarker, getSatelliteImages, getPredictions, getClusters, getEvolutions} from "../components/map-layers.js";
-import * as aq from "npm:arquero";
 ```
 
 
@@ -142,19 +135,17 @@ const map2 = L.map(mapDiv, {
 
 // Ajout d'une couche de base OpenStreetMap
 const OSM = getOSM();
-
 const OSMDark  = getOSMDark();
 const marker = getMarker(center);
 const PLEIADES =  getSatelliteImages(configg);
+const BORDERS = getClusters(geom);
 
-const predictions =  L.tileLayer.wms("https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms", {
-      layers: `dirag:MAYOTTE_PREDICTIONS_${year_end}`,
-      format: 'image/png',
-      transparent: true,
-      version: '1.1.0',
-      opacity: 1,
-      maxZoom: 21,
-    })
+const PREDICTIONS = getPredictions(configg)
+console.log(PREDICTIONS)
+
+const prediction_start = PREDICTIONS[`Prédictions ${year_start}`]
+const prediction_end = PREDICTIONS[`Prédictions ${year_end}`]
+
 
 // Ajout des couches par défaut
 OSM['OpenStreetMap clair'].addTo(map2);
@@ -163,59 +154,30 @@ BORDERS['Contours des îlots'].addTo(map2);
 // Ajouter le marqueur à la carte
 marker.addTo(map2);
 
+// 1) Construire un objet qui contiendra l'overlay
+const overlays_pred = {
+  [`Prédictions_${year_start}`]: prediction_start,
+  [`Prédictions_${year_end}`]: prediction_end
+};
 
 L.control.layers({
   ...OSM,
   ...OSMDark,
   ...PLEIADES,
-  },{
-  "git staPrédictions": predictions,
-  "Contours des îlots": borders,
-}).addTo(map2);
+  ...BORDERS
+  },
+  overlays_pred
+  ).addTo(map2);
 
 ```
-
 
 ## Analyse des évolutions
 
-```js
-Inputs.table([...evol].filter(d => (d.year_start === year1) & (d.year_end === year2)))
-```
-
-```js
-const filtered_data = [...evol].filter(d => (d.year_start === year1) & (d.year_end === year2))
-```
-
-```js
-const geomCopy = structuredClone(geom); // Modern method
-
-geomCopy.features = geomCopy.features.map(feature => {
-  const match = filtered_data.find(row => 
-    row.code === feature.properties.code && row.depcom_2018 === feature.properties.depcom_2018
-  );
-  
-  return match 
-    ? { ...feature, properties: { ...feature.properties, ...match } } 
-    : feature;
-});
-```
-
-```js 
-const EVOLUTIONS_ABS = getEvolutions(geomCopy, "evol_abs")
-```
-
-
-
-```js
+<!-- ```js
 // Récupération des différentes couches de la carte
 const OSM = getOSM();
-
 const marker = getMarker(center);
-
 const BORDERS = getClusters(geom);
-
-const year1 = "2017"
-const year2 = "2023"
 
 ///// Initialisation de la carte Leaflet
 const mapDiv = display(document.createElement("div"));
@@ -241,10 +203,9 @@ L.control.layers({
   },{
   // ...EVOLUTIONS_ABS,
   ...BORDERS,
-}).addTo(map3);
+}).addTo(map3); -->
 
-
-```
+<!-- ``` -->
 
 
 
