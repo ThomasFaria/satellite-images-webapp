@@ -10,7 +10,7 @@ export const colorScales = {
 };
 
 // Configuration des départements avec des coordonnées spécifiques et des couches supplémentaires
-export const departementConfig = {
+export const departmentConfig = {
   mayotte: {
     name: 'MAYOTTE',
     // center: [-12.78081553844026, 45.227656507434695],

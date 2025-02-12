@@ -162,7 +162,7 @@ def get_data_evol(
     # Pivot the table to have years as columns for easier comparison
     data = data.pivot(
         index=["code", "depcom_2018"], columns="year", values="area_building"
-    ).reset_index()
+    ).reset_index(drop=True)
 
     # Compute evolution for all unique year pairs
     evolution_df = pd.concat(

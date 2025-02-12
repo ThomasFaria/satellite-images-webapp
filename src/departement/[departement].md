@@ -1,18 +1,152 @@
 ```js
 // Get the department from the URL parameter
-const departement = new URL(window.location.href).pathname.split('/').pop();
-console.log(`The current department is ${departement}`);
+const department = new URL(window.location.href).pathname.split('/').pop();
+console.log(`The current department is ${department}`);
 ```
 
 ```js
 // Fonction pour formater le nom du département (première lettre en majuscule)
-function formatDepartementName(nom) {
+function formatdepartmentName(nom) {
   return nom.charAt(0).toUpperCase() + nom.slice(1).toLowerCase();
 }
 // Crée un élément h1 avec le nom du département
-const titre = html`<h1>Informations géographiques : ${formatDepartementName(departement)}</h1>`;
+const titre = html`<h1>Informations géographiques : ${formatdepartmentName(department)}</h1>`;
 display(titre);
 ```
+
+```js
+import {loadDepartmentGeom, loadDepartmentLevel, loadDepartmentEvol} from "../components/loaders.js";
+import {getConfig} from "../components/config.js";
+import {getOSM, getOSMDark, getMarker, getSatelliteImages} from "../components/map-layers.js";
+```
+
+
+```js
+const configg = getConfig(department);
+const geom = await loadDepartmentGeom(department);
+const level = await loadDepartmentLevel(department);
+const evol = await loadDepartmentEvol(department);
+```
+
+```js
+configg
+```
+
+```js
+{
+  'OpenStreetMap clair': OSM['OpenStreetMap clair'],
+  'OpenStreetMap sombre': OSMDark['OpenStreetMap sombre'],
+  }
+```
+
+```js
+[...level]
+```
+
+```js
+Inputs.table(evol)
+```
+
+
+## Analyse des îlots
+
+
+```js
+
+// Initialisation de la carte Leaflet
+const mapDiv = display(document.createElement("div"));
+mapDiv.style = "height: 600px; width: 100%; margin: 0 auto;";
+
+// Initialiser la carte avec la position centrale du département
+const map2 = L.map(mapDiv, {
+            center: center,
+            zoom: 17,           
+            maxZoom: 21 //(or even higher)
+        });
+
+
+
+// Ajout d'une couche de base OpenStreetMap
+const OSM = getOSM();
+
+// Ajout d'une couche de base sombre pour le mode sombre
+const OSMDark  = getOSMDark();
+
+const marker = getMarker(center);
+
+const PLEIADES =  getSatelliteImages(configg);
+
+
+
+const predictions =  L.tileLayer.wms("https://geoserver-satellite-images.lab.sspcloud.fr/geoserver/dirag/wms", {
+      layers: `dirag:MAYOTTE_PREDICTIONS_2022`,
+      format: 'image/png',
+      transparent: true,
+      version: '1.1.0',
+      opacity: 1,
+      maxZoom: 21,
+    })
+
+
+const addToolTip = (feature, layer) => {
+    const communeCode = feature.properties.depcom_2018 || 'N/A';
+    const ilotCode = feature.properties.code || 'N/A';
+    
+    layer.bindPopup(`
+      <b>Code Commune:</b> ${communeCode}<br>
+      <b>Code Îlot:</b> ${ilotCode}
+    `);
+  };
+
+
+const borders = L.geoJSON(geom, {
+    style: {
+    fillColor: 'transparent',
+    fillOpacity: 0,
+    color: 'black',
+    weight: 2,
+    opacity: 1
+  },
+    onEachFeature: addToolTip
+  })
+
+
+// Ajout de la couche de base par défaut
+OSM['OpenStreetMap clair'].addTo(map2);
+
+// Ajouter le marqueur à la carte
+marker.addTo(map2);
+
+
+L.control.layers({
+  ...OSM,
+  ...OSMDark,
+  ...PLEIADES,
+  },{
+  'Prédictions 2022': predictions,
+  "Contours des îlots": borders,
+}).addTo(map2);
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ```js
@@ -20,7 +154,7 @@ display(titre);
 import * as L from "npm:leaflet";
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.6.1/dist/d3.min.js";
 import { calculateQuantiles, getColor, createStyle, onEachFeature, getWMSTileLayer,createGeoJsonLayer,updateLegend,getIlotCentroid,createIlotBoundariesLayer} from "../utils/fonctions.js";
-import { quantileProbs, colorScales, departementConfig } from '../utils/config.js';
+import { quantileProbs, colorScales, departmentConfig } from '../utils/config.js';
 ```
 
 ```js
@@ -30,13 +164,13 @@ const files = [
   {id: "guadeloupe", file: FileAttachment("../data/clusters_statistics_guadeloupe.json")}
 ]
 // Trouve le fichier correspondant au département
-const selec = files.find(f => f.id === departement);
+const selec = files.find(f => f.id === department);
 const statistics = await selec.file.json();
 ```
 
 ```js
 // Choix du département Mayotte
-const config = departementConfig[departement];
+const config = departmentConfig[department];
 const { name, availableYears } = config;
 
 // Initialisation de la carte Leaflet

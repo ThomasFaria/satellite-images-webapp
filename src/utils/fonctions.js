@@ -103,7 +103,7 @@ export function createIlotBoundariesLayer(statistics) {
     opacity: 1
   };
 
-  const onEachFeature = (feature, layer) => {
+  const addToolTip = (feature, layer) => {
     const communeCode = feature.properties.depcom_2018 || 'N/A';
     const ilotCode = feature.properties.code || 'N/A';
     
@@ -115,7 +115,7 @@ export function createIlotBoundariesLayer(statistics) {
 
   return L.geoJSON(statistics, {
     style: style,
-    onEachFeature: onEachFeature
+    onEachFeature: addToolTip
   });
 }
 
