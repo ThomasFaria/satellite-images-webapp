@@ -146,7 +146,7 @@ console.log(PREDICTIONS)
 const prediction_start = PREDICTIONS[`Prédictions ${year_start}`]
 const prediction_end = PREDICTIONS[`Prédictions ${year_end}`]
 
-
+map2.addLayer(prediction_end);
 // Ajout des couches par défaut
 OSM['OpenStreetMap clair'].addTo(map2);
 BORDERS['Contours des îlots'].addTo(map2);
@@ -159,6 +159,7 @@ const overlays_pred = {
   [`Prédictions_${year_start}`]: prediction_start,
   [`Prédictions_${year_end}`]: prediction_end
 };
+
 
 L.control.layers({
   ...OSM,
