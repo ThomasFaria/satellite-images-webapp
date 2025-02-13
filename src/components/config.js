@@ -25,8 +25,8 @@ export const departmentConfig = {
     name: "GUYANE",
     availableYears: ["2022","2023","2024"],
     geomFile: () => FileAttachment('../data/guyane_clusters_geom.json'),
-    // levelFile: () => FileAttachment('../data/guyane_clusters_level.parquet'),
-    // evolFile: () => FileAttachment('../data/guyane_clusters_evol.parquet'),
+    levelFile: () => FileAttachment('../data/guyane_clusters_level.parquet'),
+    evolFile: () => FileAttachment('../data/guyane_clusters_evol.parquet'),
     // center: [4.939431292357986, -52.331352519102815],
   },
   reunion: {
@@ -53,7 +53,7 @@ export const departmentConfig = {
     geomFile: () => FileAttachment('../data/mayotte_clusters_geom.json'),
     levelFile: () => FileAttachment('../data/mayotte_clusters_level.parquet'),
     evolFile: () => FileAttachment('../data/mayotte_clusters_evol.parquet'),
-    center: [-12.78081553844026, 45.227656507434695],
+    // center: [-12.78081553844026, 45.227656507434695],
   },
   "saint-martin": {
     name: "SAINT-MARTIN",
@@ -61,7 +61,7 @@ export const departmentConfig = {
     geomFile: () => FileAttachment('../data/saint-martin_clusters_geom.json'),
     // levelFile: () => FileAttachment('../data/saint-martin_clusters_level.parquet'),
     // evolFile: () => FileAttachment('../data/saint-martin_clusters_evol.parquet'),
-    center: [18.070744391845302, -63.080322797579946],
+    // center: [18.070744391845302, -63.080322797579946],
 
   }
 };
