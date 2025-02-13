@@ -57,6 +57,7 @@ def compute_evolution(data: pd.DataFrame, year_start: str, year_end: str) -> pd.
     df["evol_rela"] = ((data[year_end] - data[year_start]) / data[year_start]) * 100
     df["year_start"] = year_start
     df["year_end"] = year_end
+    df.replace([np.inf, -np.inf], np.nan, inplace=True)
 
     return df
 
