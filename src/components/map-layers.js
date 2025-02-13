@@ -70,7 +70,8 @@ export function getPredictions(config) {
             version: '1.1.0',
             opacity: 1,
             maxZoom: 21,
-            styles : "" // TODO: USE STYLE FOR MULTICLASS
+            styles : "style_multiclass",
+            CQL_FILTER: "INCLUDE"
         });
         predictions[`Prédictions ${year}`] = layer;
     });

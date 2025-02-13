@@ -4,7 +4,7 @@ import {getConfig} from "../components/config.js";
 import {transformData} from "../components/build-table.js";
 import {getIlotCentroid} from "../utils/fonctions.js";
 import {getOSM, getOSMDark, getMarker, getSatelliteImages, getPredictions, getClusters, getEvolutions} from "../components/map-layers.js";
-import * as aq from "npm:arquero";
+import {filterObject} from "../components/utils.js";
 
 ```
 ```js
@@ -29,6 +29,9 @@ const configg = getConfig(department);
 const geom = await loadDepartmentGeom(department);
 const level = await loadDepartmentLevel(department);
 const evol = await loadDepartmentEvol(department);
+```
+
+```js
 ```
 
 ```js
@@ -141,12 +144,10 @@ const PLEIADES =  getSatelliteImages(configg);
 const BORDERS = getClusters(geom);
 
 const PREDICTIONS = getPredictions(configg)
-console.log(PREDICTIONS)
+const selectedPredictions = filterObject(PREDICTIONS, [`Prédictions ${year_start}`, `Prédictions ${year_end}`,])
 
-const prediction_start = PREDICTIONS[`Prédictions ${year_start}`]
-const prediction_end = PREDICTIONS[`Prédictions ${year_end}`]
+map2.addLayer(selectedPredictions[`Prédictions ${year_end}`]);
 
-map2.addLayer(prediction_end);
 // Ajout des couches par défaut
 OSM['OpenStreetMap clair'].addTo(map2);
 BORDERS['Contours des îlots'].addTo(map2);
@@ -154,19 +155,14 @@ BORDERS['Contours des îlots'].addTo(map2);
 // Ajouter le marqueur à la carte
 marker.addTo(map2);
 
-// 1) Construire un objet qui contiendra l'overlay
-const overlays_pred = {
-  [`Prédictions_${year_start}`]: prediction_start,
-  [`Prédictions_${year_end}`]: prediction_end
-};
-
-
 L.control.layers({
   ...OSM,
   ...OSMDark,
   ...PLEIADES
   },
-  overlays_pred
+  {
+    ...selectedPredictions,
+  }
   ).addTo(map2);
 
 ```
